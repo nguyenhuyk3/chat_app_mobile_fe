@@ -1,0 +1,1 @@
+enum PayLoadType { text, binary }
