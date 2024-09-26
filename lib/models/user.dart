@@ -1,20 +1,28 @@
-import 'package:chat_app_mobile_fe/models/enum/state.dart';
+import 'dart:math';
+
 import 'package:chat_app_mobile_fe/models/information.dart';
 
-class User {
+String generateRandomId() {
+  const characters =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  Random random = Random();
+  return List.generate(
+      8, (index) => characters[random.nextInt(characters.length)]).join();
+}
+
+class AppUser {
   final String _id;
   final String _phoneNumber;
   final String _email;
   final String hashPassword;
   final Infomation _information;
-  final State state;
+  final bool state;
   final List<String> _friends;
   final List<String> _chatRooms;
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  User({
-    required String id,
+  AppUser({
     required String phoneNumber,
     required String email,
     required this.hashPassword,
@@ -24,7 +32,7 @@ class User {
     required List<String> chatRooms,
     required this.createdAt,
     required this.updatedAt,
-  })  : _id = id,
+  })  : _id = generateRandomId(),
         _phoneNumber = phoneNumber,
         _email = email,
         _information = information,
