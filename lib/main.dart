@@ -11,8 +11,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: ChatHomeScreen(),
+    return MaterialApp(
+      initialRoute: '/home',
+      routes: <String, WidgetBuilder>{
+        '/home': (BuildContext context) => ChatHomeScreen(),
+      },
     );
   }
 }

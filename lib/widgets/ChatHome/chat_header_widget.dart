@@ -6,7 +6,7 @@ class ChatHeaderWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFF10261E),
+      color: const Color(0xFF0F181D),
       child: const ListTile(
         leading: Text(
           'Ping me!',
@@ -18,5 +18,5 @@ class ChatHeaderWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   // TODO: implement preferredSize
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(62);
 }

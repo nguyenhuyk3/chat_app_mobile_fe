@@ -2,17 +2,11 @@ import 'package:chat_app_mobile_fe/screens/chat_displayer_sceen.dart';
 import 'package:flutter/material.dart';
 
 class ChatElementWidget extends StatefulWidget {
-  final String username;
-  final String lastMessage;
-  final bool seen;
-  final String sentAt;
+  final String roomId;
 
   const ChatElementWidget({
     super.key,
-    required this.username,
-    required this.lastMessage,
-    required this.seen,
-    required this.sentAt,
+    required this.roomId,
   });
 
   @override
@@ -26,22 +20,31 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _isTapped = true;
-        });
+        setState(
+          () {
+            _isTapped = true;
+          },
+        );
 
-        Future.delayed(const Duration(milliseconds: 200), () {
-          setState(() {
-            _isTapped = false;
-          });
+        Future.delayed(
+          const Duration(milliseconds: 200),
+          () {
+            setState(
+              () {
+                _isTapped = false;
+              },
+            );
 
-          Navigator.push(
-            // ignore: use_build_context_synchronously
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ChatDisplayerScreen()),
-          );
-        });
+            Navigator.push(
+              // ignore: use_build_context_synchronously
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ChatDisplayerScreen(roomId: widget.roomId),
+              ),
+            );
+          },
+        );
       },
       child: TweenAnimationBuilder<double>(
         tween: Tween(begin: 0.0, end: _isTapped ? 1.0 : 0.0),
@@ -49,7 +52,7 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
         builder: (context, position, child) {
           return Container(
             decoration: BoxDecoration(
-              // gradient will change first color to second color
+              // Gradient will change first color to second color
               gradient: LinearGradient(
                 colors: const [
                   Colors.white30,
@@ -61,23 +64,25 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
               ),
             ),
             child: ListTile(
-              leading: const CircleAvatar(
+              leading: const SizedBox(
+                height: double.infinity,
                 child: Icon(
-                  Icons.account_circle_outlined,
-                  color: Color(0xFF566573),
+                  Icons.account_circle_sharp,
+                  color: Color(0xFF637079),
+                  size: 50, // Kích thước của biểu tượng có thể điều chỉnh
                 ),
               ),
               title: Text(
-                widget.username,
-                style: const TextStyle(color: Color(0xFFD2D6D9)),
+                'Phòng số' + widget.roomId,
+                style: const TextStyle(color: Colors.white),
               ),
-              subtitle: Text(
-                widget.lastMessage,
-                style: const TextStyle(color: Color(0xFF566573)),
+              subtitle: const Text(
+                'This will be a last message in the room',
+                style: TextStyle(color: Color(0xFF767980)),
               ),
-              trailing: Text(
-                widget.sentAt,
-                style: const TextStyle(color: Color(0xFF566573)),
+              trailing: const Text(
+                '9/26/2024',
+                style: TextStyle(color: Color(0xFF767980)),
               ),
             ),
           );
