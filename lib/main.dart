@@ -1,18 +1,12 @@
 import 'package:chat_app_mobile_fe/home.dart';
 import 'package:chat_app_mobile_fe/screens/Login_Signup/login_screen.dart';
+import 'package:chat_app_mobile_fe/screens/chat_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLogin = prefs.getBool('isLogin') ?? false;
-  runApp(MaterialApp(
-    home: isLogin ? Home() : LoginScreen(),
-    debugShowCheckedModeBanner: false,
-  ));
+void main() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -29,4 +23,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
->>>>>>> develop/develop_chat_fearture
