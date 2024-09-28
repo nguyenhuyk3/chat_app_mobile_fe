@@ -43,4 +43,19 @@ class AppUser {
   Infomation get information => _information;
   List<String> get friends => _friends;
   List<String> get chatRooms => _chatRooms;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': _id,
+      'phoneNumber': _phoneNumber,
+      'email': _email,
+      'information':
+          _information.toJson(), // Assuming Infomation has a toJson() method
+      'state': state,
+      'friends': _friends,
+      'chatRooms': _chatRooms,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+    };
+  }
 }

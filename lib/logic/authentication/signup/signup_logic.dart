@@ -38,20 +38,10 @@ class SignupLogic {
         updatedAt: DateTime.now(),
       );
 
-      await FirebaseFirestore.instance.collection('app_user').doc(user.id).set({
-        'phoneNumber': user.phoneNumber,
-        'email': user.email,
-        'information': {
-          'fullName': user.information.fullName,
-          'dateOfBirth': user.information.dateOfBirth,
-          'genre': user.information.genre.index,
-        },
-        'state': user.state,
-        'friends': user.friends,
-        'chatRooms': user.chatRooms,
-        'createdAt': user.createdAt,
-        'updatedAt': user.updatedAt,
-      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.id)
+          .set(user.toJson());
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Đăng ký thành công')),

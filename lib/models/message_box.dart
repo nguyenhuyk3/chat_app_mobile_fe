@@ -16,6 +16,7 @@ class MessageBox {
   String get id => _id;
   List<Message> get messages => _messages;
   DateTime get createdAt => _createdAt;
+
   Map<String, dynamic> toJson() {
     return {
       'id': _id,

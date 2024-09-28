@@ -14,4 +14,12 @@ class Infomation {
 
   String get fullName => _fullName;
   String get dateOfBirth => _dateOfBirth;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'fullName': _fullName,
+      'dateOfBirth': _dateOfBirth,
+      'genre': genre.toString(), // Assuming Genre is an enum
+    };
+  }
 }
