@@ -8,7 +8,7 @@ import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'login_screen.dart';
+import '../login/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -36,13 +36,12 @@ class _SignupScreenState extends State<SignupScreen> {
       200; // Bắt đầu với giá trị lớn để Container không thấy ban đầu
   final _formKey =
       GlobalKey<FormState>(); // Thêm GlobalKey để quản lý trạng thái Form
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final TextEditingController _controllerUsername = TextEditingController();
   final _auth = FirebaseAuth.instance;
   //Biến để chứa lỗi
-  String errorMessage = '';
+
   @override
   void initState() {
     super.initState();
@@ -59,7 +58,6 @@ class _SignupScreenState extends State<SignupScreen> {
     if (_formKey.currentState!.validate()) {
       // Thực hiện hành động đăng ký ở đây nếu không có lỗi
       try {
-        String hashedPassword = hashPassword(_passwordController.text);
         UserCredential userCredential =
             await _auth.createUserWithEmailAndPassword(
                 email: _controllerUsername.text,
@@ -67,8 +65,7 @@ class _SignupScreenState extends State<SignupScreen> {
         //Khởi tạo đối tượng AppUser
         final user = AppUser(
           phoneNumber: '', // Sử dụng số điện thoại hoặc email
-          email: _controllerUsername.text,
-          hashPassword: hashedPassword, // Mật khẩu đã mã hóa
+          email: _controllerUsername.text, // Mật khẩu đã mã hóa
           information: Infomation(
             fullName: '', // Cần cập nhật giá trị nếu có
             dateOfBirth: DateTime.now().toString(),
@@ -84,7 +81,6 @@ class _SignupScreenState extends State<SignupScreen> {
         await FirebaseFirestore.instance.collection('users').doc(user.id).set({
           'phoneNumber': user.phoneNumber,
           'email': user.email,
-          'hashPassword': user.hashPassword,
           'information': {
             'fullName': user.information.fullName,
             'dateOfBirth': user.information.dateOfBirth,
@@ -101,14 +97,19 @@ class _SignupScreenState extends State<SignupScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Đăng ký thành công')),
         );
+
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginScreen()));
       } on FirebaseAuthException catch (e) {
+        String errorMessage = '';
         if (e.code == 'email-already-in-use') {
           errorMessage = 'Email đã được sử dụng!';
         } else if (e.code == 'invalid-email') {
           errorMessage = 'Email không hợp lệ!';
         }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage)),
+        );
       }
     }
   }

@@ -1,11 +1,9 @@
-import 'package:chat_app_mobile_fe/home.dart';
-import 'package:chat_app_mobile_fe/screens/Login_Signup/signup_screen.dart';
+import 'package:chat_app_mobile_fe/screens/authentication/forgot_password/forgotpassword_screen.dart';
+import 'package:chat_app_mobile_fe/screens/authentication/signup/signup_screen.dart';
 import 'package:chat_app_mobile_fe/screens/chat_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'forgotpassword_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
