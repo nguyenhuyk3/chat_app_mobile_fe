@@ -1,4 +1,4 @@
-import 'package:chat_app_mobile_fe/screens/Login_Signup/login_screen.dart';
+import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

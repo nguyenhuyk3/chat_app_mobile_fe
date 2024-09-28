@@ -14,7 +14,6 @@ class AppUser {
   final String _id;
   final String _phoneNumber;
   final String _email;
-  final String hashPassword;
   final Infomation _information;
   final bool state;
   final List<String> _friends;
@@ -25,7 +24,6 @@ class AppUser {
   AppUser({
     required String phoneNumber,
     required String email,
-    required this.hashPassword,
     required Infomation information,
     required this.state,
     required List<String> friends,
