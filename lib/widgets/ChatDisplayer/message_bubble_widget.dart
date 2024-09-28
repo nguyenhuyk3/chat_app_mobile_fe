@@ -16,9 +16,6 @@ class MessageBubbleWidget extends StatefulWidget {
 class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
   @override
   Widget build(BuildContext context) {
-    print(widget.senderId);
-    print("jijij");
-    print(widget.message.senderId);
     return Align(
       alignment: widget.senderId == widget.message.senderId
           ? Alignment.centerRight

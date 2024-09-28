@@ -1,5 +1,6 @@
 import 'package:chat_app_mobile_fe/home.dart';
 import 'package:chat_app_mobile_fe/screens/Login_Signup/signup_screen.dart';
+import 'package:chat_app_mobile_fe/screens/chat_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         _saveLogin();
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => ChatHomeScreen()));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           errorMessage = 'Không tìm thấy tài khoản!';

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chat_app_mobile_fe/widgets/ChatHome/chat_element_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ChatListWidget extends StatefulWidget {
@@ -17,13 +18,12 @@ class _ChatListWidgetState extends State<ChatListWidget> {
   final Set<String> _roomIds = {};
 
   Future<void> _getRoomIds() async {
-    const url = "http://localhost:8080/ws/getRooms";
-
+    const url = "http://192.168.1.5:8080/ws/getRooms";
+   
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
-
         setState(() {
           for (var item in jsonData) {
             String id = item["id"];
@@ -40,10 +40,11 @@ class _ChatListWidgetState extends State<ChatListWidget> {
   void initState() {
     super.initState();
 
-    String url = "ws://localhost:8080/ws/joinMasterRoom";
+    String url = "ws://192.168.1.5:/ws/joinMasterRoom";
 
-    _channel = WebSocketChannel.connect(Uri.parse(url));
+    _channel = IOWebSocketChannel.connect(Uri.parse(url));
 
+    print(_channel);
     _channel.stream.listen(
       (data) {
         final jsonData = jsonDecode(data);
@@ -51,7 +52,14 @@ class _ChatListWidgetState extends State<ChatListWidget> {
           _roomIds.add(jsonData["roomId"]);
         });
       },
+      onError: (error) {
+        print('Có lỗi xảy ra: $error');
+      },
+      onDone: () {
+        print('Kết nối đã bị đóng');
+      },
     );
+    print("slkdfjklsdjf");
 
     _getRoomIds();
   }
@@ -74,4 +82,3 @@ class _ChatListWidgetState extends State<ChatListWidget> {
         ));
   }
 }
-
