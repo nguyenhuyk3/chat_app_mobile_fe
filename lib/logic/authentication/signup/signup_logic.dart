@@ -38,7 +38,7 @@ class SignupLogic {
         updatedAt: DateTime.now(),
       );
 
-      await FirebaseFirestore.instance.collection('users').doc(user.id).set({
+      await FirebaseFirestore.instance.collection('app_user').doc(user.id).set({
         'phoneNumber': user.phoneNumber,
         'email': user.email,
         'information': {

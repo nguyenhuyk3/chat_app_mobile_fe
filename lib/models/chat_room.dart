@@ -20,4 +20,15 @@ class ChatRoom {
   String get id => _id;
   List<String> get members => _members;
   String get createdBy => _createdBy;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': _id,
+      'isGroups': isGroups,
+      'members': _members,
+      'createdBy': _createdBy,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+    };
+  }
 }
