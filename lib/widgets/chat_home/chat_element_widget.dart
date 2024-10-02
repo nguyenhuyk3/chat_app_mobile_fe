@@ -1,4 +1,4 @@
-import 'package:chat_app_mobile_fe/screens/chat_displayer_sceen.dart';
+import 'package:chat_app_mobile_fe/screens/chat/chat_displayer_sceen.dart';
 import 'package:flutter/material.dart';
 
 class ChatElementWidget extends StatefulWidget {
@@ -14,7 +14,8 @@ class ChatElementWidget extends StatefulWidget {
 }
 
 class _ChatElementWidgetState extends State<ChatElementWidget> {
-  bool _isTapped = false; // Biến trạng thái để theo dõi khi nhấn
+  // state variable to track when pressed
+  bool _isTapped = false; 
 
   @override
   Widget build(BuildContext context) {

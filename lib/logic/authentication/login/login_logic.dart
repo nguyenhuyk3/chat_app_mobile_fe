@@ -1,4 +1,5 @@
-import 'package:chat_app_mobile_fe/home.dart';
+import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
+import 'package:chat_app_mobile_fe/screens/home.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,7 +23,7 @@ class LoginLogic {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => Home())); // Sử dụng named route
+              builder: (context) => HomeScreen())); // Sử dụng named route
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       if (e.code == 'user-not-found') {

@@ -32,6 +32,8 @@ class SignupLogic {
           genre: Genre.male,
         ),
         state: true,
+        sendingInvitationBoxId: "",
+        receivingInvitationBoxId: "",
         friends: [],
         chatRooms: [],
         createdAt: DateTime.now(),
@@ -52,7 +54,7 @@ class SignupLogic {
         'createdAt': user.createdAt,
         'updatedAt': user.updatedAt,
       });
-
+  
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Đăng ký thành công')),
       );
@@ -61,11 +63,13 @@ class SignupLogic {
           context, MaterialPageRoute(builder: (context) => LoginScreen()));
     } on FirebaseAuthException catch (e) {
       String errorMessage = '';
+
       if (e.code == 'email-already-in-use') {
         errorMessage = 'Email đã được sử dụng!';
       } else if (e.code == 'invalid-email') {
         errorMessage = 'Email không hợp lệ!';
       }
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );

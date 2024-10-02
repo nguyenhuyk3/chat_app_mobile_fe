@@ -1,5 +1,5 @@
 import 'package:chat_app_mobile_fe/screens/Login_Signup/login_screen.dart';
-import 'package:chat_app_mobile_fe/screens/chat_home_screen.dart';
+import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> _checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? loggedIn =
-        prefs.getBool('isLogin'); // Kiểm tra xem người dùng đã đăng nhập chưa
+        prefs.getBool('isLoggedIn'); // Kiểm tra xem người dùng đã đăng nhập chưa
     setState(() {
       _isLoggedIn =
           loggedIn ?? false; // Nếu chưa có giá trị thì mặc định là false
@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: _isLoggedIn ? ChatHomeScreen() : LoginScreen(),
+      home:  LoginScreen(),
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => ChatHomeScreen(),
         '/login': (BuildContext context) => LoginScreen(),

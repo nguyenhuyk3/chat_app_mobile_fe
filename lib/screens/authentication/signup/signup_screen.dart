@@ -64,35 +64,26 @@ class _SignupScreenState extends State<SignupScreen> {
                 password: _passwordController.text);
         //Khởi tạo đối tượng AppUser
         final user = AppUser(
-          phoneNumber: '', // Sử dụng số điện thoại hoặc email
-          email: _controllerUsername.text, // Mật khẩu đã mã hóa
+          phoneNumber: '',
+          email: _controllerUsername.text,
           information: Infomation(
-            fullName: '', // Cần cập nhật giá trị nếu có
+            fullName: '',
             dateOfBirth: DateTime.now().toString(),
-            genre: Genre.male, // Thay đổi theo yêu cầu
+            genre: Genre.male,
           ),
-          state: true, // Trạng thái mặc định
+          state: true,
+          sendingInvitationBoxId: "",
+          receivingInvitationBoxId: "",
           friends: [],
           chatRooms: [],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
         // Lưu thông tin người dùng vào Cloud Firestore
-        await FirebaseFirestore.instance.collection('users').doc(user.id).set({
-          'phoneNumber': user.phoneNumber,
-          'email': user.email,
-          'information': {
-            'fullName': user.information.fullName,
-            'dateOfBirth': user.information.dateOfBirth,
-            'genre':
-                user.information.genre.index, // Lưu dưới dạng số hoặc chuỗi
-          },
-          'state': user.state,
-          'friends': user.friends,
-          'chatRooms': user.chatRooms,
-          'createdAt': user.createdAt,
-          'updatedAt': user.updatedAt,
-        });
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.id)
+            .set(user.toJson());
         // Điều hướng tới trang đăng nhập
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Đăng ký thành công')),

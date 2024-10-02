@@ -21,11 +21,14 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-            Color(0xE80A2405),
-            Color(0xE8181819),
-            Color(0xE80E1332),
-          ])),
+            gradient: LinearGradient(
+              colors: [
+                Color(0xE80A2405),
+                Color(0xE8181819),
+                Color(0xE80E1332),
+              ],
+            ),
+          ),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:chat_app_mobile_fe/widgets/ChatHome/chat_element_widget.dart';
+import 'package:chat_app_mobile_fe/global/global_var.dart';
+import 'package:chat_app_mobile_fe/widgets/chat_home/chat_element_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
@@ -18,8 +19,8 @@ class _ChatListWidgetState extends State<ChatListWidget> {
   final Set<String> _roomIds = {};
 
   Future<void> _getRoomIds() async {
-    const url = "http://192.168.1.5:8080/ws/getRooms";
-   
+    String url = "${GlobalVar.httpBaseUrl}/ws/getRooms";
+
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -40,7 +41,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
   void initState() {
     super.initState();
 
-    String url = "ws://192.168.1.5:/ws/joinMasterRoom";
+    String url = "${GlobalVar.websocketBaseUrl}/joinMasterRoom";
 
     _channel = IOWebSocketChannel.connect(Uri.parse(url));
 
@@ -59,7 +60,6 @@ class _ChatListWidgetState extends State<ChatListWidget> {
         print('Kết nối đã bị đóng');
       },
     );
-    print("slkdfjklsdjf");
 
     _getRoomIds();
   }

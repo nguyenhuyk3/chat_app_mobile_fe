@@ -4,8 +4,8 @@ import 'package:chat_app_mobile_fe/response_models/message.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter/material.dart';
 
-import 'package:chat_app_mobile_fe/global/user.dart';
-import 'package:chat_app_mobile_fe/widgets/ChatDisplayer/message_bubble_widget.dart';
+import 'package:chat_app_mobile_fe/global/global_var.dart';
+import 'package:chat_app_mobile_fe/widgets/chat_displayer/message_bubble_widget.dart';
 
 class ChatDisplayerScreen extends StatefulWidget {
   final String roomId;
@@ -28,8 +28,8 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
     super.initState();
 
     id = random.nextInt(20);
-    username = "user" + User.id.toString();
-    
+    username = "user" + GlobalVar.id.toString();
+
     String roomId = widget.roomId;
 
     final String url =
@@ -43,23 +43,25 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
       (data) {
         final jsonData = jsonDecode(data);
 
-        setState(() {
-          print(jsonData);
+        setState(
+          () {
+            print(jsonData);
 
-          String messageId = random.nextInt(200).toString();
-          String content = jsonData["content"];
-          String roomId = jsonData["roomId"];
-          String userName = jsonData["username"];
+            String messageId = random.nextInt(200).toString();
+            String content = jsonData["content"];
+            String roomId = jsonData["roomId"];
+            String userName = jsonData["username"];
 
-          Message message = Message(
-              messageId: random.nextInt(200).toString(),
-              senderId: userName,
-              roomId: roomId,
-              content: content,
-              createdAt: DateTime.now());
+            Message message = Message(
+                messageId: random.nextInt(200).toString(),
+                senderId: userName,
+                roomId: roomId,
+                content: content,
+                createdAt: DateTime.now());
 
-          messages.add(message);
-        });
+            messages.add(message);
+          },
+        );
       },
     );
   }
@@ -69,11 +71,13 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
       required String userName,
       required String content}) {
     if (content.isNotEmpty) {
-      final message = jsonEncode({
-        "content": content,
-        "roomId": roomId,
-        "username": username,
-      });
+      final message = jsonEncode(
+        {
+          "content": content,
+          "roomId": roomId,
+          "username": username,
+        },
+      );
 
       _channel.sink.add(message);
       _messageController.clear();
