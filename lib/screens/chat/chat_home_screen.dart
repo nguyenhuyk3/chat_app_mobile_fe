@@ -12,7 +12,7 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ChatListWidget(),
+      child: const ChatListWidget(),
     );
   }
 }

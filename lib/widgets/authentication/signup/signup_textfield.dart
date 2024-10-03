@@ -9,20 +9,20 @@ class SignupTextField extends StatelessWidget {
   final VoidCallback? toggleObscureText;
 
   const SignupTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.label,
     required this.hint,
     required this.obscureText,
     required this.validator,
     this.toggleObscureText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFE6EBF1),
+        color: const Color(0xFFE6EBF1),
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
           BoxShadow(
@@ -41,10 +41,11 @@ class SignupTextField extends StatelessWidget {
         controller: controller,
         validator: validator,
         obscureText: obscureText,
+        keyboardType: TextInputType.text,
         decoration: InputDecoration(
           label: Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black,
               fontSize: 18,
@@ -59,7 +60,7 @@ class SignupTextField extends StatelessWidget {
           suffixIcon: toggleObscureText != null
               ? IconButton(
                   icon: Icon(
-                      obscureText ? Icons.visibility : Icons.visibility_off),
+                      obscureText ? Icons.visibility_off : Icons.visibility),
                   onPressed: toggleObscureText,
                 )
               : null,

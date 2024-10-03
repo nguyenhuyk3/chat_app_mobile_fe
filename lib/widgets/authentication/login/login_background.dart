@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoginBackground extends StatelessWidget {
-  const LoginBackground({Key? key}) : super(key: key);
+  const LoginBackground({super.key});
 
   @override
   Widget build(BuildContext context) {

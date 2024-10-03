@@ -10,4 +10,11 @@ class Payload {
 
   Type get type => _type;
   dynamic get payload => _payload;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'type': _type.toString(), // Assuming Type is an enum or class
+      'payload': _payload,
+    };
+  }
 }

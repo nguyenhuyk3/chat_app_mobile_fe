@@ -19,10 +19,10 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
 
   Future<void> _sendVerificationLink() async {
     //.trim để loại bỏ các khoảng trắng ở đầu và cuối của chuỗi để tránh lỗi cho người dùng khi nhập dư khoảng trắng
-    String _email = _emailcontroller.text.trim();
+    String email = _emailcontroller.text.trim();
 
     // Kiểm tra định dạng email
-    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(_email)) {
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Email không hợp lệ')),
       );
@@ -33,7 +33,7 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
       // Truy vấn Firestore để kiểm tra sự tồn tại của email
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .where('email', isEqualTo: _email)
+          .where('email', isEqualTo: email)
           .get();
       if (querySnapshot.docs.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -41,7 +41,7 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
         );
         return;
       }
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: _email);
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Đã gửi link về mail của bạn!')),
       );
@@ -63,14 +63,14 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [
             Color(0xE80A2405),
             Color(0xE8181819),
             Color(0xE80E1332),
           ])),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Container(
         height: double.infinity,

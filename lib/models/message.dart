@@ -24,4 +24,14 @@ class Message {
   String get receiverId => _receiverId;
   Payload get payload => _payload;
   DateTime get createdAt => _createdAt;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'idOfChatRoom': _idOfChatRoom,
+      'senderId': _senderId,
+      'receiverId': _receiverId,
+      'payload': _payload.toJson(),
+      'createdAt': _createdAt.toIso8601String(),
+    };
+  }
 }

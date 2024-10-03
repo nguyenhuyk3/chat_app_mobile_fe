@@ -6,11 +6,11 @@ class ForgotPasswordForm extends StatefulWidget {
   final Function(String email) onSubmit;
 
   const ForgotPasswordForm({
-    Key? key,
+    super.key,
     required this.emailController,
     required this.formKey,
     required this.onSubmit,
-  }) : super(key: key);
+  });
 
   @override
   _ForgotPasswordFormState createState() => _ForgotPasswordFormState();

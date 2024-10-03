@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:chat_app_mobile_fe/screens/authentication/forgot_password/forgotpassword_screen.dart';
 
 class ForgotPasswordLink extends StatelessWidget {
-  const ForgotPasswordLink({Key? key}) : super(key: key);
+  const ForgotPasswordLink({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class ForgotPasswordLink extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ForgotPasswordScreen(),
+              builder: (context) => const ForgotPasswordScreen(),
             ),
           );
         },

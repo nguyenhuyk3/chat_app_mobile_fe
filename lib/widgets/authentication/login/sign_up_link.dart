@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:chat_app_mobile_fe/screens/authentication/signup/signup_screen.dart';
 
 class SignUpLink extends StatelessWidget {
-  const SignUpLink({Key? key}) : super(key: key);
+  const SignUpLink({super.key});
 
   @override
   Widget build(BuildContext context) {

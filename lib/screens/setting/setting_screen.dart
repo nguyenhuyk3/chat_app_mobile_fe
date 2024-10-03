@@ -1,4 +1,3 @@
-import 'package:chat_app_mobile_fe/widgets/setting/setting_items.dart';
 import 'package:flutter/material.dart';
 
 class MySettingScreen extends StatefulWidget {
@@ -27,10 +26,7 @@ class _MySettingScreenState extends State<MySettingScreen> {
       body: Container(
         child: const SingleChildScrollView(
           child: Column(
-            children: [
-              // MySettingInfor(),
-              SettingItems(),
-            ],
+            children: [],
           ),
         ),
       ),

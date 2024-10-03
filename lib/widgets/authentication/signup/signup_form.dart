@@ -6,6 +6,8 @@ import 'signup_textfield.dart';
 import 'login_link.dart';
 
 class SignupForm extends StatefulWidget {
+  const SignupForm({super.key});
+
   @override
   _SignupFormState createState() => _SignupFormState();
 }
@@ -14,82 +16,132 @@ class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _controllerUsername = TextEditingController();
-
+  final _controllerUserEmail = TextEditingController();
+  final _controllerFullname = TextEditingController();
   bool _obscureText = true;
   bool _obscureTextCF = true;
+  double _paddingBottom = 0;
+  // Bắt đầu với giá trị lớn để Container không thấy ban đầu
+  double _paddingTop = 200;
+  
+  @override
+  void initState() {
+    super.initState();
+    // Delay để tạo hiệu ứng trượt
+    Future.delayed(
+      const Duration(milliseconds: 300),
+      () {
+        setState(
+          () {
+            _paddingBottom = 200;
+            // Sau 300ms, đặt padding về giá trị mong muốn
+            _paddingTop = 0;
+          },
+        );
+      },
+    );
+  }
+
+  void _register() async {
+    if (_formKey.currentState!.validate()) {
+      await AuthServices().registerUser(
+          _controllerUserEmail.text, _passwordController.text, context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 40),
-            SignupTextField(
-              controller: _controllerUsername,
-              label: 'Tên đăng nhập',
-              hint: 'Nhập email',
-              obscureText: false,
-              validator: ValidatingHelper().validateEmail,
+    return AnimatedPadding(
+      padding: EdgeInsets.only(bottom: _paddingBottom),
+      duration: const Duration(milliseconds: 800),
+      child: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(40),
+            bottomRight: Radius.circular(40),
+          ),
+          color: Colors.white,
+        ),
+        height: double.infinity,
+        width: double.infinity,
+        child: SingleChildScrollView(
+          child: AnimatedPadding(
+            duration: const Duration(milliseconds: 800),
+            padding: EdgeInsets.only(left: 18, right: 18, top: _paddingTop),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  SignupTextField(
+                    controller: _controllerFullname,
+                    label: 'Họ và tên',
+                    hint: 'Nhập họ và tên',
+                    obscureText: false,
+                    validator: null,
+                  ),
+                  const SizedBox(height: 20),
+                  SignupTextField(
+                    controller: _controllerUserEmail,
+                    label: 'Tên đăng nhập',
+                    hint: 'Nhập email',
+                    obscureText: false,
+                    validator: ValidatingHelper().validateEmail,
+                  ),
+                  const SizedBox(height: 20),
+                  SignupTextField(
+                    controller: _passwordController,
+                    label: 'Mật khẩu',
+                    hint: 'Nhập mật khẩu',
+                    obscureText: _obscureText,
+                    validator: ValidatingHelper().validatePassword,
+                    toggleObscureText: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  SignupTextField(
+                    controller: _confirmPasswordController,
+                    label: 'Nhập lại mật khẩu',
+                    hint: 'Nhập lại mật khẩu',
+                    obscureText: _obscureTextCF,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Vui lòng nhập lại mật khẩu!';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Mật khẩu không khớp!';
+                      }
+                      return null;
+                    },
+                    toggleObscureText: () {
+                      setState(() {
+                        _obscureTextCF = !_obscureTextCF;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  SignupButton(onPressed: _register),
+                  const SizedBox(height: 10),
+                  // Logo
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Image.asset(
+                        'assets/img/logo/logo_2.png',
+                        height: 150,
+                      ),
+                      const LoginLink(),
+                    ],
+                  )
+                  // Link đến màn hình đăng nhập
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-            SignupTextField(
-              controller: _passwordController,
-              label: 'Mật khẩu',
-              hint: 'Nhập mật khẩu',
-              obscureText: _obscureText,
-              validator: ValidatingHelper().validatePassword,
-              toggleObscureText: () {
-                setState(() {
-                  _obscureText = !_obscureText;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            SignupTextField(
-              controller: _confirmPasswordController,
-              label: 'Nhập lại mật khẩu',
-              hint: 'Nhập lại mật khẩu',
-              obscureText: _obscureTextCF,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Vui lòng nhập lại mật khẩu!';
-                }
-                if (value != _passwordController.text) {
-                  return 'Mật khẩu không khớp!';
-                }
-                return null;
-              },
-              toggleObscureText: () {
-                setState(() {
-                  _obscureTextCF = !_obscureTextCF;
-                });
-              },
-            ),
-            const SizedBox(height: 30),
-            SignupButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  AuthServices().registerUser(
-                    _controllerUsername.text,
-                    _passwordController.text,
-                    context,
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 10),
-            // Logo
-            Image.asset(
-              'assets/img/logo/logo_2.png',
-              height: 150,
-            ),
-            LoginLink(), // Link đến màn hình đăng nhập
-          ],
+          ),
         ),
       ),
     );
