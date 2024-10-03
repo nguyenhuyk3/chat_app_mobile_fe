@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           LoginBackground(),
-          LoginForm(), // Sử dụng LoginForm ở đây
+          LoginForm(),
         ],
       ),
     );

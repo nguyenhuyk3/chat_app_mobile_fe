@@ -1,5 +1,4 @@
 import 'package:chat_app_mobile_fe/widgets/authentication/forgot_password/forgot_password_form.dart';
-import 'package:chat_app_mobile_fe/logic/authentication/forgot_password/verifilink.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -45,7 +44,7 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
           emailController: _emailcontroller,
           formKey: _formkey,
           onSubmit: (email) {
-            sendVerificationLink(context, email);
+            // sendVerificationLink(context, email);
           },
         ),
       ),

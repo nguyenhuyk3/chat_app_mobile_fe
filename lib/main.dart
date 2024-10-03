@@ -1,4 +1,4 @@
-import 'package:chat_app_mobile_fe/screens/Login_Signup/login_screen.dart';
+import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
 import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,18 +29,18 @@ class _MyAppState extends State<MyApp> {
   // Kiểm tra trạng thái đăng nhập
   Future<void> _checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? loggedIn =
-        prefs.getBool('isLoggedIn'); // Kiểm tra xem người dùng đã đăng nhập chưa
+    // Kiểm tra xem người dùng đã đăng nhập chưa
+    bool? loggedIn = prefs.getBool('isLoggedIn');
     setState(() {
-      _isLoggedIn =
-          loggedIn ?? false; // Nếu chưa có giá trị thì mặc định là false
+      // Nếu chưa có giá trị thì mặc định là false
+      _isLoggedIn = loggedIn ?? false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home:  LoginScreen(),
+      home: LoginScreen(),
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => ChatHomeScreen(),
         '/login': (BuildContext context) => LoginScreen(),

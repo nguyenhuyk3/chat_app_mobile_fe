@@ -1,11 +1,5 @@
-import 'dart:convert';
-
-import 'package:chat_app_mobile_fe/models/enum/genre.dart';
-import 'package:chat_app_mobile_fe/models/information.dart';
-import 'package:chat_app_mobile_fe/models/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto/crypto.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chat_app_mobile_fe/helpers/validating_helper.dart';
+import 'package:chat_app_mobile_fe/services/auth_services.dart';
 import 'package:flutter/material.dart';
 
 import '../login/login_screen.dart';
@@ -17,112 +11,36 @@ class SignupScreen extends StatefulWidget {
   }
 }
 
-String hashPassword(String password) {
-  // Chuyển đổi mật khẩu thành mảng byte
-  final bytes = utf8.encode(password);
-
-  // Tạo hash SHA-256
-  final digest = sha256.convert(bytes);
-
-  // Trả về chuỗi hash
-  return digest.toString();
-}
-
 class _SignupScreenState extends State<SignupScreen> {
   bool _obscureText = true;
   bool _obscureTextCF = true;
   double _paddingBottom = 0;
-  double _paddingTop =
-      200; // Bắt đầu với giá trị lớn để Container không thấy ban đầu
-  final _formKey =
-      GlobalKey<FormState>(); // Thêm GlobalKey để quản lý trạng thái Form
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final TextEditingController _controllerUsername = TextEditingController();
-  final _auth = FirebaseAuth.instance;
-  //Biến để chứa lỗi
+  // Bắt đầu với giá trị lớn để Container không thấy ban đầu
+  double _paddingTop = 200;
+  // Thêm GlobalKey để quản lý trạng thái Form
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _controllerUserEmail = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     // Delay để tạo hiệu ứng trượt
-    Future.delayed(Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       setState(() {
         _paddingBottom = 200;
-        _paddingTop = 0; // Sau 300ms, đặt padding về giá trị mong muốn
+        // Sau 300ms, đặt padding về giá trị mong muốn
+        _paddingTop = 0;
       });
     });
   }
 
   void _register() async {
     if (_formKey.currentState!.validate()) {
-      // Thực hiện hành động đăng ký ở đây nếu không có lỗi
-      try {
-        UserCredential userCredential =
-            await _auth.createUserWithEmailAndPassword(
-                email: _controllerUsername.text,
-                password: _passwordController.text);
-        //Khởi tạo đối tượng AppUser
-        final user = AppUser(
-          phoneNumber: '',
-          email: _controllerUsername.text,
-          information: Infomation(
-            fullName: '',
-            dateOfBirth: DateTime.now().toString(),
-            genre: Genre.male,
-          ),
-          state: true,
-          sendingInvitationBoxId: "",
-          receivingInvitationBoxId: "",
-          friends: [],
-          chatRooms: [],
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
-        // Lưu thông tin người dùng vào Cloud Firestore
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.id)
-            .set(user.toJson());
-        // Điều hướng tới trang đăng nhập
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đăng ký thành công')),
-        );
-
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      } on FirebaseAuthException catch (e) {
-        String errorMessage = '';
-        if (e.code == 'email-already-in-use') {
-          errorMessage = 'Email đã được sử dụng!';
-        } else if (e.code == 'invalid-email') {
-          errorMessage = 'Email không hợp lệ!';
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
-        );
-      }
+      await AuthServices().registerUser(_controllerUserEmail.text, _passwordController.text, context);
     }
-  }
-
-  // Validator cho email
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập email';
-    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-      return 'Email không hợp lệ';
-    }
-    return null;
-  }
-
-  // Validator cho mật khẩu
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập mật khẩu';
-    } else if (value.length < 6) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự';
-    }
-    return null;
   }
 
   @override
@@ -198,14 +116,16 @@ class _SignupScreenState extends State<SignupScreen> {
                             ],
                           ),
                           child: TextFormField(
-                            controller: _controllerUsername,
-                            validator: _validateEmail,
+                            controller: _controllerUserEmail,
+                            validator: ValidatingHelper().validateEmail,
                             decoration: const InputDecoration(
                               hintText: 'Nhập email',
                               hintStyle: TextStyle(fontWeight: FontWeight.w400),
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 20),
+                                vertical: 15,
+                                horizontal: 20,
+                              ),
                               label: Text(
                                 'Tên đăng nhập',
                                 style: TextStyle(
@@ -239,37 +159,38 @@ class _SignupScreenState extends State<SignupScreen> {
                             ],
                           ),
                           child: TextFormField(
-                              controller: _passwordController,
-                              decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _obscureText = !_obscureText;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _obscureText
-                                        ? Icons.visibility_off_outlined
-                                        : Icons.visibility_outlined,
-                                    color: Colors.grey,
-                                  ),
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                                icon: Icon(
+                                  _obscureText
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
+                                  color: Colors.grey,
                                 ),
-                                label: const Text(
-                                  'Mật khẩu',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                    fontWeight: FontWeight.w400),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 20),
                               ),
-                              obscureText: _obscureText,
-                              validator: _validatePassword),
+                              label: const Text(
+                                'Mật khẩu',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              hintStyle:
+                                  const TextStyle(fontWeight: FontWeight.w400),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
+                            obscureText: _obscureText,
+                            validator: ValidatingHelper().validatePassword,
+                          ),
                         ),
 
                         const SizedBox(height: 20),
@@ -320,7 +241,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                   const TextStyle(fontWeight: FontWeight.w400),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 20),
+                                vertical: 15,
+                                horizontal: 20,
+                              ),
                             ),
                             obscureText: _obscureTextCF,
                             validator: (value) {
@@ -330,24 +253,25 @@ class _SignupScreenState extends State<SignupScreen> {
                               if (value != _passwordController.text) {
                                 return 'Mật khẩu không khớp!';
                               }
-                              return null; // Nếu không có lỗi, trả về null
+                              return null;
                             },
                           ),
                         ),
 
                         const SizedBox(height: 30),
 
-                        // Nút Đăng Ký
                         Container(
                           height: 55,
                           width: 300,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            gradient: const LinearGradient(colors: [
-                              Color(0xE80E1332),
-                              Color(0xE8181819),
-                              Color(0xE80A2405),
-                            ]),
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color(0xE80E1332),
+                                Color(0xE8181819),
+                                Color(0xE80A2405),
+                              ],
+                            ),
                           ),
                           child: TextButton(
                             onPressed:

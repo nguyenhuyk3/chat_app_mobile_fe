@@ -1,32 +1,34 @@
+import 'package:chat_app_mobile_fe/helpers/validating_helper.dart';
+import 'package:chat_app_mobile_fe/services/auth_services.dart';
 import 'package:chat_app_mobile_fe/widgets/authentication/login/sign_up_link.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app_mobile_fe/logic/authentication/login/login_logic.dart';
 import 'login_textfield.dart';
 import 'login_button.dart';
 import 'package:chat_app_mobile_fe/screens/authentication/forgot_password/forgotpassword_screen.dart';
-import 'package:chat_app_mobile_fe/screens/authentication/signup/signup_screen.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+  const LoginForm({super.key});
 
   @override
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final TextEditingController _usercontroller = TextEditingController();
+  final TextEditingController _userEmailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
-  final LoginLogic loginLogic = LoginLogic();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   double _paddingTop = 0;
 
   @override
   void initState() {
     super.initState();
+
     Future.delayed(const Duration(milliseconds: 200), () {
-      setState(() {
-        _paddingTop = 200;
-      });
+      setState(
+        () {
+          _paddingTop = 200;
+        },
+      );
     });
   }
 
@@ -59,10 +61,10 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   const SizedBox(height: 10),
                   LoginTextField(
-                    controller: _usercontroller,
+                    controller: _userEmailcontroller,
                     label: 'Tên đăng nhập',
                     hint: 'Nhập email',
-                    validator: _validateEmail,
+                    validator: ValidatingHelper().validateEmail,
                   ),
                   const SizedBox(height: 20),
                   LoginTextField(
@@ -70,7 +72,7 @@ class _LoginFormState extends State<LoginForm> {
                     label: 'Mật khẩu',
                     hint: 'Nhập mật khẩu',
                     obscureText: true,
-                    validator: _validatePassword,
+                    validator: ValidatingHelper().validatePassword,
                   ),
                   const SizedBox(height: 10),
                   Align(
@@ -80,7 +82,7 @@ class _LoginFormState extends State<LoginForm> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ForgotPasswordScreen(),
+                            builder: (context) => const ForgotPasswordScreen(),
                           ),
                         );
                       },
@@ -99,16 +101,13 @@ class _LoginFormState extends State<LoginForm> {
                   LoginButton(
                     onPressed: () {
                       if (_formkey.currentState!.validate()) {
-                        loginLogic.login(
-                          context,
-                          _usercontroller.text,
-                          _passwordcontroller.text,
-                        );
+                        AuthServices().login(context, _userEmailcontroller.text,
+                            _passwordcontroller.text);
                       }
                     },
                   ),
                   const SizedBox(height: 50),
-                  SignUpLink(),
+                  const SignUpLink(),
                 ],
               ),
             ),
@@ -116,23 +115,5 @@ class _LoginFormState extends State<LoginForm> {
         ),
       ),
     );
-  }
-
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập email';
-    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-      return 'Email không hợp lệ';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập mật khẩu';
-    } else if (value.length < 6) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự';
-    }
-    return null;
   }
 }

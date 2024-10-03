@@ -1,16 +1,6 @@
-import 'dart:math';
 import 'package:chat_app_mobile_fe/models/information.dart';
 
-String generateRandomId() {
-  const characters =
-      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  Random random = Random();
-  return List.generate(
-      8, (index) => characters[random.nextInt(characters.length)]).join();
-}
-
 class AppUser {
-  final String _id;
   final String _phoneNumber;
   final String _email;
   final Infomation _information;
@@ -19,8 +9,8 @@ class AppUser {
   final String _receivingInvitationBoxId;
   final List<String> _friends;
   final List<String> _chatRooms;
-  final DateTime _createdAt;
-  final DateTime _updatedAt;
+  final String _createdAt;
+  final String _updatedAt;
 
   AppUser({
     required String phoneNumber,
@@ -31,10 +21,9 @@ class AppUser {
     required String receivingInvitationBoxId,
     required List<String> friends,
     required List<String> chatRooms,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-  })  : _id = generateRandomId(),
-        _phoneNumber = phoneNumber,
+    required String createdAt,
+    required String updatedAt,
+  })  : _phoneNumber = phoneNumber,
         _email = email,
         _information = information,
         _state = state,
@@ -45,7 +34,6 @@ class AppUser {
         _createdAt = createdAt,
         _updatedAt = updatedAt;
 
-  String get id => _id;
   String get phoneNumber => _phoneNumber;
   String get email => _email;
   Infomation get information => _information;
@@ -54,12 +42,11 @@ class AppUser {
   String get receivingInvitationBoxId => _receivingInvitationBoxId;
   List<String> get friends => _friends;
   List<String> get chatRooms => _chatRooms;
-  DateTime get createdAt => _createdAt;
-  DateTime get updatedAt => _updatedAt;
+  String get createdAt => _createdAt;
+  String get updatedAt => _updatedAt;
 
   Map<String, dynamic> toJson() {
     return {
-      'id': _id,
       'phoneNumber': _phoneNumber,
       'email': _email,
       'information': _information.toJson(),
@@ -68,8 +55,8 @@ class AppUser {
       'receivingInvitationBoxId': _receivingInvitationBoxId,
       'friends': _friends,
       'chatRooms': _chatRooms,
-      'createdAt': _createdAt.toIso8601String(), 
-      'updatedAt': _updatedAt.toIso8601String(), 
+      'createdAt': _createdAt,
+      'updatedAt': _updatedAt,
     };
   }
 
@@ -78,14 +65,15 @@ class AppUser {
       phoneNumber: json['phoneNumber'],
       email: json['email'],
       information: Infomation.fromJson(
-          json['information']), 
+        json['information'],
+      ),
       state: json['state'],
       sendingInvitationBoxId: json['sendingInvitationBoxId'],
       receivingInvitationBoxId: json['receivingInvitationBoxId'],
       friends: List<String>.from(json['friends']),
       chatRooms: List<String>.from(json['chatRooms']),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
   }
 }

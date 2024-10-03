@@ -1,4 +1,5 @@
-import 'package:chat_app_mobile_fe/logic/authentication/signup/signup_logic.dart';
+import 'package:chat_app_mobile_fe/helpers/validating_helper.dart';
+import 'package:chat_app_mobile_fe/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'signup_button.dart';
 import 'signup_textfield.dart';
@@ -14,7 +15,6 @@ class _SignupFormState extends State<SignupForm> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _controllerUsername = TextEditingController();
-  final SignupLogic _signupLogic = SignupLogic();
 
   bool _obscureText = true;
   bool _obscureTextCF = true;
@@ -34,7 +34,7 @@ class _SignupFormState extends State<SignupForm> {
               label: 'Tên đăng nhập',
               hint: 'Nhập email',
               obscureText: false,
-              validator: _signupLogic.validateEmail,
+              validator: ValidatingHelper().validateEmail,
             ),
             const SizedBox(height: 20),
             SignupTextField(
@@ -42,7 +42,7 @@ class _SignupFormState extends State<SignupForm> {
               label: 'Mật khẩu',
               hint: 'Nhập mật khẩu',
               obscureText: _obscureText,
-              validator: _signupLogic.validatePassword,
+              validator: ValidatingHelper().validatePassword,
               toggleObscureText: () {
                 setState(() {
                   _obscureText = !_obscureText;
@@ -74,7 +74,7 @@ class _SignupFormState extends State<SignupForm> {
             SignupButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  _signupLogic.registerUser(
+                  AuthServices().registerUser(
                     _controllerUsername.text,
                     _passwordController.text,
                     context,

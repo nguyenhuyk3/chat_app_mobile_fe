@@ -13,7 +13,7 @@ class SharedPreferencesHelper {
     }
 
     SharedPreferences pref = await SharedPreferences.getInstance();
-
+  
     await pref.setString("sendingInvitationBoxId", id);
   }
 

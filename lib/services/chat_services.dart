@@ -1,4 +1,5 @@
-import 'package:chat_app_mobile_fe/response_models/message.dart';
+
+import 'package:chat_app_mobile_fe/widgets/chat_displayer/message_bubble_widget.dart';
 
 abstract class ChatServices {
   void sendMessage(
