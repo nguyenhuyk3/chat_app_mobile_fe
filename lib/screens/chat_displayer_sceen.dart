@@ -20,7 +20,7 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
   Random random = Random();
   late int id;
   late String username;
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
   List<Message> messages = [];
 
   @override
@@ -28,8 +28,8 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
     super.initState();
 
     id = random.nextInt(20);
-    username = "user" + User.id.toString();
-    
+    username = "user${User.id}";
+
     String roomId = widget.roomId;
 
     final String url =

@@ -1,24 +1,16 @@
-import 'dart:convert';
 import 'package:chat_app_mobile_fe/models/enum/genre.dart';
 import 'package:chat_app_mobile_fe/models/information.dart';
 import 'package:chat_app_mobile_fe/models/user.dart';
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-String hashPassword(String password) {
-  final bytes = utf8.encode(password);
-  final digest = sha256.convert(bytes);
-  return digest.toString();
-}
 
 class SignupLogic {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> registerUser(
-      String email, String password, BuildContext context) async {
+      String name, String email, String password, BuildContext context) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -27,7 +19,7 @@ class SignupLogic {
         phoneNumber: '',
         email: email,
         information: Infomation(
-          fullName: '',
+          fullName: name,
           dateOfBirth: DateTime.now().toString(),
           genre: Genre.male,
         ),
@@ -44,11 +36,11 @@ class SignupLogic {
           .set(user.toJson());
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Đăng ký thành công')),
+        const SnackBar(content: Text('Đăng ký thành công')),
       );
 
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
     } on FirebaseAuthException catch (e) {
       String errorMessage = '';
       if (e.code == 'email-already-in-use') {

@@ -13,10 +13,9 @@ class ChatHomeScreen extends StatefulWidget {
 class _ChatHomeScreenState extends State<ChatHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       appBar: ChatHeaderWidget(),
       body: ChatListWidget(),
     );
   }
 }
-

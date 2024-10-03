@@ -6,15 +6,18 @@ class LoginTextField extends StatelessWidget {
   final String hint;
   final bool obscureText;
   final String? Function(String?)? validator;
+  final VoidCallback?
+      toggleObscureText; // Callback để toggle trạng thái hiển thị mật khẩu
 
   const LoginTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.label,
     required this.hint,
     this.obscureText = false,
     this.validator,
-  }) : super(key: key);
+    this.toggleObscureText, // Thêm toggleObscureText vào constructor
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,7 @@ class LoginTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         validator: validator,
+        obscureText: obscureText,
         decoration: InputDecoration(
           label: Text(
             label,
@@ -52,8 +56,16 @@ class LoginTextField extends StatelessWidget {
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          suffixIcon: toggleObscureText !=
+                  null // Nếu toggleObscureText không null, hiển thị IconButton
+              ? IconButton(
+                  icon: Icon(
+                      obscureText ? Icons.visibility_off : Icons.visibility),
+                  onPressed:
+                      toggleObscureText, // Khi nhấn vào, gọi toggleObscureText
+                )
+              : null,
         ),
-        obscureText: obscureText,
       ),
     );
   }

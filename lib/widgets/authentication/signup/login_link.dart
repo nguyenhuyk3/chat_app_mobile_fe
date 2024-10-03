@@ -2,18 +2,34 @@ import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dar
 import 'package:flutter/material.dart';
 
 class LoginLink extends StatelessWidget {
+  const LoginLink({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
-      },
-      child: const Text(
-        'Đã có tài khoản? Đăng nhập',
-        style: TextStyle(color: Colors.white),
+    return Padding(
+      padding: EdgeInsets.only(top: 80),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const Text('Bạn đã có tài khoản!'),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
+            },
+            child: const Text(
+              'LOGIN',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 17,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

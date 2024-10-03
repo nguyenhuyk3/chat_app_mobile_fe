@@ -12,22 +12,23 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   void _logout() async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    await _auth.signOut();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    await auth.signOut();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLogin', false);
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
       ),
       body: Center(
-        child: ElevatedButton(onPressed: _logout, child: Text('Đăng xuất')),
+        child:
+            ElevatedButton(onPressed: _logout, child: const Text('Đăng xuất')),
       ),
     );
   }

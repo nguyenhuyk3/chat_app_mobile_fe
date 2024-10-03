@@ -17,9 +17,9 @@ class Infomation {
 
   Map<String, dynamic> toJson() {
     return {
-      'fullName': _fullName,
-      'dateOfBirth': _dateOfBirth,
-      'genre': genre.toString(), // Assuming Genre is an enum
+      'fullName': fullName,
+      'dateOfBirth': dateOfBirth,
+      'genre': genre.toString().split('.').last, // Chuyển enum thành chuỗi
     };
   }
 }

@@ -22,7 +22,7 @@ class LoginLogic {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => Home())); // Sử dụng named route
+              builder: (context) => const Home())); // Sử dụng named route
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       if (e.code == 'user-not-found') {

@@ -73,7 +73,7 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
                 ),
               ),
               title: Text(
-                'Phòng số' + widget.roomId,
+                'Phòng số${widget.roomId}',
                 style: const TextStyle(color: Colors.white),
               ),
               subtitle: const Text(
@@ -91,4 +91,3 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
     );
   }
 }
-

@@ -19,7 +19,7 @@ class _LoginFormState extends State<LoginForm> {
   final LoginLogic loginLogic = LoginLogic();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   double _paddingTop = 0;
-
+  bool _obscureText = true;
   @override
   void initState() {
     super.initState();
@@ -69,8 +69,13 @@ class _LoginFormState extends State<LoginForm> {
                     controller: _passwordcontroller,
                     label: 'Mật khẩu',
                     hint: 'Nhập mật khẩu',
-                    obscureText: true,
+                    obscureText: _obscureText,
                     validator: _validatePassword,
+                    toggleObscureText: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
                   ),
                   const SizedBox(height: 10),
                   Align(
