@@ -1,3 +1,4 @@
+import 'package:chat_app_mobile_fe/screens/authentication/signup/signup_enter_email_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app_mobile_fe/screens/authentication/signup/signup_screen.dart';
 
@@ -18,7 +19,7 @@ class SignUpLink extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SignupScreen(),
+                  builder: (context) => SignupEnterEmailScreen(),
                 ),
               );
             },
