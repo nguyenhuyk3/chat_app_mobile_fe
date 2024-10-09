@@ -1,3 +1,4 @@
+import 'package:chat_app_mobile_fe/services/auth_services.dart';
 import 'package:chat_app_mobile_fe/widgets/authentication/forgot_password/forgot_password_form.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,8 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
   final _emailcontroller = TextEditingController();
   final _formkey = GlobalKey<FormState>();
+  final AuthServices _authServices =
+      AuthServices(); // Tạo instance của AuthServices
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,8 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
           emailController: _emailcontroller,
           formKey: _formkey,
           onSubmit: (email) {
-            // sendVerificationLink(context, email);
+            _authServices.sendVerifycationLink(
+                context, email); // Truyền hàm vào đây
           },
         ),
       ),

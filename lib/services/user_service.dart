@@ -77,7 +77,7 @@ class UserService {
   static Future<List<FriendRequest>> getAllInvitations(String boxType) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    late final type;
+    late final String type;
     late String? invitationBoxId;
 
     switch (boxType) {
@@ -103,7 +103,7 @@ class UserService {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
-        
+
         List<dynamic> friendRequestsJson =
             responseBody['makeFriendRequests']['friendRequests'];
         List<FriendRequest> friendRequests = friendRequestsJson

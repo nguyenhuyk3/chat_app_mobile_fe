@@ -3,10 +3,11 @@ import 'package:chat_app_mobile_fe/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'signup_button.dart';
 import 'signup_textfield.dart';
-import 'login_link.dart';
 
 class SignupForm extends StatefulWidget {
-  const SignupForm({super.key});
+  final String email; // Thêm biến email
+
+  const SignupForm({super.key, required this.email});
 
   @override
   _SignupFormState createState() => _SignupFormState();
@@ -17,13 +18,12 @@ class _SignupFormState extends State<SignupForm> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _controllerUserEmail = TextEditingController();
-  final _controllerFullname = TextEditingController();
   bool _obscureText = true;
   bool _obscureTextCF = true;
   double _paddingBottom = 0;
   // Bắt đầu với giá trị lớn để Container không thấy ban đầu
   double _paddingTop = 200;
-  
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +33,7 @@ class _SignupFormState extends State<SignupForm> {
       () {
         setState(
           () {
+            _controllerUserEmail.text = widget.email;
             _paddingBottom = 200;
             // Sau 300ms, đặt padding về giá trị mong muốn
             _paddingTop = 0;
@@ -74,12 +75,18 @@ class _SignupFormState extends State<SignupForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 40),
-                  SignupTextField(
-                    controller: _controllerFullname,
-                    label: 'Họ và tên',
-                    hint: 'Nhập họ và tên',
-                    obscureText: false,
-                    validator: null,
+                  const Text(
+                    'Bước 3',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 25,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Logo
+                  Image.asset(
+                    'assets/img/logo/logo_2.png',
+                    height: 150,
                   ),
                   const SizedBox(height: 20),
                   SignupTextField(
@@ -88,6 +95,7 @@ class _SignupFormState extends State<SignupForm> {
                     hint: 'Nhập email',
                     obscureText: false,
                     validator: ValidatingHelper().validateEmail,
+                    readOnly: true,
                   ),
                   const SizedBox(height: 20),
                   SignupTextField(
@@ -125,19 +133,6 @@ class _SignupFormState extends State<SignupForm> {
                   ),
                   const SizedBox(height: 30),
                   SignupButton(onPressed: _register),
-                  const SizedBox(height: 10),
-                  // Logo
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        'assets/img/logo/logo_2.png',
-                        height: 150,
-                      ),
-                      const LoginLink(),
-                    ],
-                  )
-                  // Link đến màn hình đăng nhập
                 ],
               ),
             ),

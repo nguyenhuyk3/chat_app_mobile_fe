@@ -1,7 +1,10 @@
 import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
-import 'package:chat_app_mobile_fe/models/information.dart';
 import 'package:chat_app_mobile_fe/models/collections/user.collec.dart';
+import 'package:chat_app_mobile_fe/models/information.dart';
+
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
+import 'package:chat_app_mobile_fe/screens/authentication/signup/signup_field_infor_screen.dart';
+import 'package:chat_app_mobile_fe/screens/authentication/signup/signup_screen.dart';
 import 'package:chat_app_mobile_fe/screens/home.screen.dart';
 import 'package:chat_app_mobile_fe/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,9 +50,12 @@ class AuthServices {
 
       // Navigate to LoginScreen or any other screen after registration
       Navigator.pushReplacement(
-          // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignupFieldInforScreen(email: email),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       String errorMessage = '';
 
@@ -58,11 +64,93 @@ class AuthServices {
       } else if (e.code == 'invalid-email') {
         errorMessage = 'Email không hợp lệ!';
       }
-
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );
+    }
+  }
+
+  Future<void> verifyCode(
+      String email, String enteredCode, BuildContext context) async {
+    try {
+      // Lấy tài liệu từ Firestore
+      DocumentSnapshot document = await FirebaseFirestore.instance
+          .collection('verificationSignupCodes')
+          .doc(email)
+          .get();
+
+      if (document.exists) {
+        // Ép kiểu dữ liệu để truy cập vào các phần tử
+        Map<String, dynamic>? data = document.data() as Map<String, dynamic>?;
+        String? verificationCode = data?['verificationCode'];
+        DateTime expirationTime =
+            (data?['expirationTime'] as Timestamp).toDate();
+
+        // Kiểm tra mã xác minh và thời gian hết hạn
+        if (verificationCode == enteredCode) {
+          if (DateTime.now().isBefore(expirationTime)) {
+            // Chuyển tới trang SignupScreen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SignupScreen(
+                        email: email,
+                      )),
+            );
+          } else {
+            // Thông báo mã đã hết hạn
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Mã xác minh đã hết hạn.')),
+            );
+          }
+        } else {
+          // Thông báo mã xác minh không đúng
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Mã xác minh không đúng.')),
+          );
+        }
+      } else {
+        // Thông báo không tìm thấy tài liệu
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Không tìm thấy mã xác minh cho email này.')),
+        );
+      }
+    } catch (e) {
+      // Xử lý lỗi
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đã xảy ra lỗi: $e')),
+      );
+    }
+  }
+
+  Future<void> updateUserInfo(
+      String email, String fullName, String dateOfBirth, String genre) async {
+    try {
+      // Tìm người dùng trong Firestore dựa trên email
+      QuerySnapshot querySnapshot =
+          await _db.collection('users').where('email', isEqualTo: email).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Lấy ID của tài liệu
+        String userId = querySnapshot.docs.first.id;
+
+        // Cập nhật thông tin người dùng
+        await _db.collection('users').doc(userId).update({
+          'information': {
+            'fullName': fullName,
+            'dateOfBirth': dateOfBirth,
+            'genre': genre,
+          },
+        });
+
+        print('Thông tin người dùng đã được cập nhật thành công!');
+      } else {
+        print('Không tìm thấy người dùng với email này.');
+      }
+    } catch (e) {
+      print('Đã xảy ra lỗi khi cập nhật thông tin người dùng: $e');
     }
   }
 
@@ -106,5 +194,45 @@ class AuthServices {
       );
     }
   }
-  
+
+  Future<void> sendVerifycationLink(BuildContext context, String email) async {
+    // Kiểm tra định dạng email
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email không hợp lệ')),
+      );
+      return;
+    }
+
+    try {
+      // Truy vấn Firestore để kiểm tra sự tồn tại của email
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+      if (querySnapshot.docs.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Email không tồn tại')),
+        );
+        return;
+      }
+      // Gửi email đặt lại mật khẩu
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã gửi link về mail của bạn!')),
+      );
+
+      // Điều hướng về trang đăng nhập sau khi gửi thành công
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi khi gửi mã: $e')),
+      );
+    }
+  }
 }

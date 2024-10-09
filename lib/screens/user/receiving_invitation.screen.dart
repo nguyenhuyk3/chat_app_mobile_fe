@@ -1,5 +1,4 @@
 import 'package:chat_app_mobile_fe/models/friend_request.dart';
-import 'package:chat_app_mobile_fe/models/from_user_infor.dart';
 import 'package:chat_app_mobile_fe/services/user_service.dart';
 import 'package:flutter/material.dart';
 

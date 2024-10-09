@@ -7,6 +7,7 @@ class SignupTextField extends StatelessWidget {
   final bool obscureText;
   final String? Function(String?)? validator;
   final VoidCallback? toggleObscureText;
+  final bool readOnly;
 
   const SignupTextField({
     super.key,
@@ -16,6 +17,7 @@ class SignupTextField extends StatelessWidget {
     required this.obscureText,
     required this.validator,
     this.toggleObscureText,
+    this.readOnly = false,
   });
 
   @override
@@ -42,6 +44,7 @@ class SignupTextField extends StatelessWidget {
         validator: validator,
         obscureText: obscureText,
         keyboardType: TextInputType.text,
+        readOnly: readOnly,
         decoration: InputDecoration(
           label: Text(
             label,

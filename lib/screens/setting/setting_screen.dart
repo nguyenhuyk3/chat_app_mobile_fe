@@ -1,3 +1,6 @@
+import 'package:chat_app_mobile_fe/widgets/setting/setting_infor.dart';
+import 'package:chat_app_mobile_fe/widgets/setting/setting_items.dart';
+import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_name.dart';
 import 'package:flutter/material.dart';
 
 class MySettingScreen extends StatefulWidget {
@@ -11,9 +14,10 @@ class _MySettingScreenState extends State<MySettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF0B141B),
+      backgroundColor: const Color(0xFF0B141B),
       appBar: AppBar(
-        backgroundColor: Color(0xFF0B141B),
+        backgroundColor: const Color(0xFF0B141B),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Row(
           children: [
             Text(
@@ -26,7 +30,10 @@ class _MySettingScreenState extends State<MySettingScreen> {
       body: Container(
         child: const SingleChildScrollView(
           child: Column(
-            children: [],
+            children: [
+              MySettingInfor(),
+              SettingItems(),
+            ],
           ),
         ),
       ),

@@ -4,6 +4,9 @@ import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_form.dar
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
+  final String email; // Thêm biến email
+
+  const SignupScreen({super.key, required this.email});
   @override
   State<StatefulWidget> createState() {
     return _SignupScreenState();
@@ -11,8 +14,8 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  bool _obscureText = true;
-  bool _obscureTextCF = true;
+  final bool _obscureText = true;
+  final bool _obscureTextCF = true;
   double _paddingBottom = 0;
   // Bắt đầu với giá trị lớn để Container không thấy ban đầu
   double _paddingTop = 200;
@@ -45,12 +48,14 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          SignupBackground(),
-          SignupForm(),
+          const SignupBackground(),
+          SignupForm(
+            email: widget.email,
+          ),
         ],
       ),
     );

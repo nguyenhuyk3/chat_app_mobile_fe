@@ -6,12 +6,11 @@ class SettingItem extends StatelessWidget {
   final String subtitle; // Biến để nhận phụ đề
   final VoidCallback onPressed; // Biến để nhận hàm callback khi nhấn
   const SettingItem(
-      {Key? key,
+      {super.key,
       required this.icon,
       required this.title,
       required this.subtitle,
-      required this.onPressed})
-      : super(key: key);
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

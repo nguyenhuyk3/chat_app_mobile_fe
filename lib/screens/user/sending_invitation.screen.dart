@@ -48,7 +48,7 @@ class _SendingInvitationScreenState extends State<SendingInvitationScreen> {
             ),
           );
         } else {
-          return Text("No invitations found.");
+          return const Text("No invitations found.");
         }
       },
     );
@@ -57,6 +57,6 @@ class _SendingInvitationScreenState extends State<SendingInvitationScreen> {
   void _cancelFriendRequest(int index) {
     // Xử lý hủy lời mời
     // Có thể cập nhật giao diện ở đây nếu cần
-    print('Đã hủy lời mời tới ${index}'); // Hoặc hiển thị thông tin cụ thể
+    print('Đã hủy lời mời tới $index'); // Hoặc hiển thị thông tin cụ thể
   }
 }

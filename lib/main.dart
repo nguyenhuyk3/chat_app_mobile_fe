@@ -1,5 +1,6 @@
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
 import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
+import 'package:chat_app_mobile_fe/screens/setting/setting_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,11 +42,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
+      home: const LoginScreen(),
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => ChatHomeScreen(),
-        '/login': (BuildContext context) => LoginScreen(),
+        '/home': (BuildContext context) => const ChatHomeScreen(),
+        '/login': (BuildContext context) => const LoginScreen(),
       },
+      debugShowCheckedModeBanner: false,
     );
   }
 }

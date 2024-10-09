@@ -1,4 +1,5 @@
-import 'package:chat_app_mobile_fe/widgets/setting/change_account_info.dart';
+import 'package:chat_app_mobile_fe/screens/setting/setting_change_password_screen.dart';
+import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_name.dart';
 import 'package:chat_app_mobile_fe/widgets/setting/setting_item.dart';
 import 'package:flutter/material.dart';
 
@@ -12,31 +13,16 @@ class SettingItems extends StatelessWidget {
         SettingItem(
           icon: Icons.key,
           title: 'Tài khoản',
-          subtitle: 'Đổi email, đổi mật khẩu',
-          onPressed: () => _moveAccount(context),
+          subtitle: 'Đổi mật khẩu',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const SettingChangePasswordScreen()),
+            );
+          },
         ),
-        // SettingItem(
-        //   icon: Icons.supervised_user_circle,
-        //   title: 'Ảnh đại diện',
-        //   subtitle: 'Tạo, chỉnh sửa ảnh đại diện',
-        // ),
       ],
-    );
-  }
-
-  static void _moveAccount(BuildContext context) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ChangeAccountInfo(),
-    //   ),
-    // );
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChangeAccountInfo(),
-      ),
     );
   }
 }
