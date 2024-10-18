@@ -1,37 +1,39 @@
-import 'package:chat_app_mobile_fe/models/payload.dart';
-
 class Message {
-  final String _idOfChatRoom;
   final String _senderId;
-  final String _receiverId;
-  final Payload _payload;
-  final DateTime _createdAt;
+  final String _content;
+  final String _state;
+  final String _createdAt;
 
   Message({
-    required String idOfChatRoom,
     required String senderId,
-    required String receiverId,
-    required Payload payload,
-    required DateTime createdAt,
-  })  : _idOfChatRoom = idOfChatRoom,
-        _senderId = senderId,
-        _receiverId = receiverId,
-        _payload = payload,
+    required String content,
+    required String state,
+    required String createdAt,
+  })  : _senderId = senderId,
+        _content = content,
+        _state = state,
         _createdAt = createdAt;
 
-  String get idOfChatRoom => _idOfChatRoom;
   String get senderId => _senderId;
-  String get receiverId => _receiverId;
-  Payload get payload => _payload;
-  DateTime get createdAt => _createdAt;
+  String get content => _content;
+  String get state => _state;
+  String get createdAt => _createdAt;
+
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      senderId: json['senderId'],
+      content: json['content'],
+      state: json['state'],
+      createdAt: json['createdAt'],
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
-      'idOfChatRoom': _idOfChatRoom,
       'senderId': _senderId,
-      'receiverId': _receiverId,
-      'payload': _payload.toJson(),
-      'createdAt': _createdAt.toIso8601String(),
+      'content': _content,
+      'state': _state,
+      'createdAt': _createdAt,
     };
   }
 }

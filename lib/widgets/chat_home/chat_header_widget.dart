@@ -1,4 +1,4 @@
-import 'package:chat_app_mobile_fe/widgets/chat_home/chat_header/search_bar_widget.dart';
+import 'package:chat_app_mobile_fe/widgets/chat_home/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 
 class ChatHeaderWidget extends StatefulWidget {
@@ -17,11 +17,11 @@ class _ChatHeaderWidgetState extends State<ChatHeaderWidget> {
     return AppBar(
       // hide back arrow
       // automaticallyImplyLeading: false,
-      backgroundColor: const Color(0xFF0F181D),
+      backgroundColor: const Color(0xFF31363F),
       elevation: 1,
       title: _isSearching
           ? SearchBarWidget(searchController: _searchController)
-          : Text("PingMe!!", style: TextStyle(color: Colors.white)),
+          : const Text("PingMe!!", style: TextStyle(color: Colors.white)),
       actions: [
         _isSearching
             ? IconButton(

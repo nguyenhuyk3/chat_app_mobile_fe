@@ -2,8 +2,8 @@ import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
 import 'package:chat_app_mobile_fe/models/information.dart';
 import 'package:chat_app_mobile_fe/models/collections/user.collec.dart';
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
-import 'package:chat_app_mobile_fe/screens/home.screen.dart';
-import 'package:chat_app_mobile_fe/services/user_service.dart';
+import 'package:chat_app_mobile_fe/screens/home/home.screen.dart';
+import 'package:chat_app_mobile_fe/services/user.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +12,10 @@ class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> registerUser(
-      String email, String password, BuildContext context) async {
+  Future<void> registerUser(String email, String password, String fullName,
+      BuildContext context) async {
     try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
+      UserCredential _ = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -25,7 +24,7 @@ class AuthServices {
         phoneNumber: '',
         email: email,
         information: Infomation(
-          fullName: '',
+          fullName: fullName,
           dateOfBirth: DateTime.now().toString(),
           genre: "Nam",
         ),
@@ -45,7 +44,7 @@ class AuthServices {
         const SnackBar(content: Text('Đăng ký thành công')),
       );
 
-      // Navigate to LoginScreen or any other screen after registration
+      // The user will not be able to return to the previous screen by pressing the back button
       Navigator.pushReplacement(
           // ignore: use_build_context_synchronously
           context,
@@ -69,7 +68,7 @@ class AuthServices {
   Future<void> login(
       BuildContext context, String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      UserCredential _ = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -106,5 +105,4 @@ class AuthServices {
       );
     }
   }
-  
 }

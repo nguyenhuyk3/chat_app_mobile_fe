@@ -1,6 +1,5 @@
 import 'package:chat_app_mobile_fe/models/friend_request.dart';
-import 'package:chat_app_mobile_fe/models/from_user_infor.dart';
-import 'package:chat_app_mobile_fe/services/user_service.dart';
+import 'package:chat_app_mobile_fe/services/user.service.dart';
 import 'package:flutter/material.dart';
 
 class ReceivingInvitationScreen extends StatefulWidget {
@@ -12,88 +11,182 @@ class ReceivingInvitationScreen extends StatefulWidget {
 }
 
 class _ReceivingInvitationScreenState extends State<ReceivingInvitationScreen> {
-  // void _acceptFriendRequest(int index) {
-  //   setState(() {
-  //     friendRequests[index].status = "accepted";
-  //   });
+  void onDeletePressed(
+      String fromUserEmail, int index, List<FriendRequest> invitations) async {
+    try {
+      await UserService.deleteReceivingInvitation(fromUserEmail);
 
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text(
-  //           'Đã chấp nhận ${friendRequests[index].fromUserInfor.fromUserEmail}'),
-  //     ),
-  //   );
-  // }
+      setState(
+        () {
+          invitations.removeAt(index);
+        },
+      );
 
-  // void _deleteFriendRequest(int index) {
-  //   final removedEmail = friendRequests[index]
-  //       .fromUserInfor
-  //       .fromUserEmail; // Lưu lại email đã xóa
-  //   setState(() {
-  //     friendRequests.removeAt(index);
-  //   });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã xóa lời mời kết bạn')),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi: $error')),
+      );
+    }
+  }
 
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text('Đã xóa lời mời từ $removedEmail'),
-  //     ),
-  //   );
-  // }
+  void onAcceptPressed(
+      String fromUserEmail, int index, List<FriendRequest> invitations) async {
+    try {
+      await UserService.acceptInvitation(fromUserEmail);
+
+      setState(() {
+        invitations.removeAt(index);
+      });
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã chấp nhận lời mời kết bạn')),
+      );
+    } catch (error) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi: $error')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<FriendRequest>>(
-      future: UserService.getAllInvitations("sending_invitation_box"),
-      builder:
-          (BuildContext context, AsyncSnapshot<List<FriendRequest>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          List<FriendRequest> invitations = snapshot.data!;
+    return Container(
+      color: const Color(0xFF31363F),
+      child: FutureBuilder<List<FriendRequest>>(
+        future: UserService.getAllInvitations("receiving_invitation_box"),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<FriendRequest>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            List<FriendRequest> invitations = snapshot.data!;
 
-          return ListView.builder(
-            itemCount: invitations.length,
-            itemBuilder: (context, index) {
-              FriendRequest invitation = invitations[index];
+            return ListView.builder(
+                itemCount: invitations.length,
+                itemBuilder: (context, index) {
+                  FriendRequest invitation = invitations[index];
 
-              return Card(
-                child: ListTile(
-                  title: Text(invitation.fromUserInfor.fromUserEmail),
-                  subtitle: Text('Trạng thái: ${invitation.status}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // _acceptFriendRequest(index);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.teal,
+                              child: Text(
+                                invitation.fromUserInfor.fromUserName[0]
+                                    .toUpperCase(),
+                                style: const TextStyle(
+                                    fontSize: 24, color: Colors.white),
+                              ),
+                            ),
+                            const SizedBox(width: 13),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    invitation.fromUserInfor.fromUserName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    invitation.fromUserInfor.fromUserEmail,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.grey[400],
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        child: const Text('Chấp nhận'),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          // _deleteFriendRequest(index);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
+                        const SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Gửi lúc: ${invitation.createdAt}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () => onAcceptPressed(
+                                    invitation.fromUserInfor.fromUserEmail,
+                                    index,
+                                    invitations,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF0D7C66),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Chấp nhận',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                OutlinedButton(
+                                  onPressed: () => onDeletePressed(
+                                    invitation.fromUserInfor.fromUserEmail,
+                                    index,
+                                    invitations,
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Xóa',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        child: const Text('Xóa'),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        } else {
-          return const Text("No invitations found.");
-        }
-      },
+                      ],
+                    ),
+                  );
+                });
+          } else {
+            return const Center(
+              child: Text(
+                'Bạn không nhận được lời mời kết bạn nào',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

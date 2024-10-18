@@ -32,11 +32,12 @@ class _SenderWidgetState extends State<SenderWidget> {
             ),
           ),
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.send,
-                color: Colors.green,
-              ))
+            onPressed: () {},
+            icon: const Icon(
+              Icons.send,
+              color: Colors.green,
+            ),
+          )
         ],
       ),
     );

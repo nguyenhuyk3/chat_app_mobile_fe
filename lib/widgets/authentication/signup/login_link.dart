@@ -7,7 +7,7 @@ class LoginLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 80),
+      padding: const EdgeInsets.only(top: 80),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -17,7 +17,7 @@ class LoginLink extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
             child: const Text(

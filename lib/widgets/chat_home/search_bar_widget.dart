@@ -15,7 +15,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   Widget build(BuildContext context) {
     return TextField(
       controller: widget._searchController,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: 'Tìm kiếm bạn bè....',
         hintStyle: TextStyle(color: Colors.grey),
       ),

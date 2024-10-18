@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:chat_app_mobile_fe/global/global_var.dart';
+import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
+import 'package:chat_app_mobile_fe/models/response/all_message_boxes.response.dart';
 import 'package:chat_app_mobile_fe/widgets/chat_home/chat_element_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,43 +17,46 @@ class ChatListWidget extends StatefulWidget {
 }
 
 class _ChatListWidgetState extends State<ChatListWidget> {
-  late WebSocketChannel _channel;
-  final Set<String> _roomIds = {};
+  late String? userId;
+  late WebSocketChannel channel;
+  List<MessageBoxResponse> messageBoxes = [];
 
-  Future<void> _getRoomIds() async {
-    String url = "${GlobalVar.httpBaseUrl}/ws/getRooms";
+  Future<void> _initUserId() async {
+    userId = await SharedPreferencesHelper.getUserId();
+  }
+
+  Future<void> _getMessageBoxes() async {
+    String url =
+        "${GlobalVar.httpBaseUrl}/users/get_all_message_boxes?userId=${userId!}";
 
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        setState(() {
-          for (var item in jsonData) {
-            String id = item["id"];
-            _roomIds.add(id);
-          }
-        });
+        final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+
+        setState(
+          () {
+            messageBoxes = MessageBoxResponse.parseJsonDataToList(jsonData);
+          },
+        );
       }
-    } catch (e) {
-      print('hihi Có lỗi xảy ra: $e');
+    } catch (error) {
+      print('Có lỗi xảy ra khi lấy messageBoxes (getMessageBox): $error');
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Future<void> _initializeChat() async {
+    await _getMessageBoxes();
 
-    String url = "${GlobalVar.websocketBaseUrl}/joinMasterRoom";
+    String url =
+        "${GlobalVar.websocketBaseUrl}/join_master_room?user_id=${userId!}";
 
-    _channel = IOWebSocketChannel.connect(Uri.parse(url));
-
-    print(_channel);
-    _channel.stream.listen(
-      (data) {
+    channel = IOWebSocketChannel.connect(Uri.parse(url));
+    channel.stream.listen(
+      (dynamic data) {
         final jsonData = jsonDecode(data);
-        setState(() {
-          _roomIds.add(jsonData["roomId"]);
-        });
+
+        print(jsonData);
       },
       onError: (error) {
         print('Có lỗi xảy ra: $error');
@@ -60,25 +65,40 @@ class _ChatListWidgetState extends State<ChatListWidget> {
         print('Kết nối đã bị đóng');
       },
     );
+  }
 
-    _getRoomIds();
+  @override
+  void initState() {
+    super.initState();
+
+    _initUserId().then(
+      (_) => {_initializeChat()},
+    );
   }
 
   @override
   void dispose() {
-    _channel.sink.close();
+    channel.sink.close();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: const Color(0xFF0F181D),
-        child: ListView.builder(
-          itemCount: _roomIds.length,
-          itemBuilder: (context, index) {
-            return ChatElementWidget(roomId: _roomIds.elementAt(index));
-          },
-        ));
+      color: const Color(0xFF222831),
+      child: ListView.builder(
+        itemCount: messageBoxes.length,
+        itemBuilder: (context, index) {
+          return ChatElementWidget(
+            messageBoxId: messageBoxes[index].messageBoxId,
+            receiverId: messageBoxes[index].firstInforUser.id != userId!
+                ? messageBoxes[index].firstInforUser.id
+                : messageBoxes[index].secondInforUser.id,
+            messageBoxReponse: messageBoxes[index],
+          );
+        },
+      ),
+    );
   }
 }

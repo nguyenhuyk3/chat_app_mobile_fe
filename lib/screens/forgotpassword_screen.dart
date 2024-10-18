@@ -119,24 +119,25 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
                       style: const TextStyle(color: Colors.white),
                     )),
                 Padding(
-                    padding:
-                        const EdgeInsets.only(top: 240, left: 20, right: 20),
-                    child: Container(
-                      height: 40,
-                      width: 380,
-                      decoration: BoxDecoration(
-                          color: Colors.deepPurpleAccent.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(30)),
-                      child: TextButton(
-                          onPressed: _sendVerificationLink,
-                          child: const Text(
-                            'TIẾP TỤC',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colors.white),
-                          )),
-                    ))
+                  padding: const EdgeInsets.only(top: 240, left: 20, right: 20),
+                  child: Container(
+                    height: 40,
+                    width: 380,
+                    decoration: BoxDecoration(
+                        color: Colors.deepPurpleAccent.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(30)),
+                    child: TextButton(
+                      onPressed: _sendVerificationLink,
+                      child: const Text(
+                        'TIẾP TỤC',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

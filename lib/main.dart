@@ -1,12 +1,18 @@
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
-import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
+import 'package:chat_app_mobile_fe/services/fcm_service.services.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(const MyApp());
 }
 
@@ -18,34 +24,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _isLoggedIn = false;
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  late FCMService _fcmService;
 
   @override
   void initState() {
     super.initState();
 
-    _checkLoginStatus();
-  }
-
-  // Kiểm tra trạng thái đăng nhập
-  Future<void> _checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Kiểm tra xem người dùng đã đăng nhập chưa
-    bool? loggedIn = prefs.getBool('isLoggedIn');
-    setState(() {
-      // Nếu chưa có giá trị thì mặc định là false
-      _isLoggedIn = loggedIn ?? false;
-    });
+    _fcmService = FCMService();
+    _fcmService.setupFCM(_navigatorKey);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
-      routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => ChatHomeScreen(),
-        '/login': (BuildContext context) => LoginScreen(),
-      },
+      navigatorKey: _navigatorKey,
+      home: const LoginScreen(),
     );
   }
 }

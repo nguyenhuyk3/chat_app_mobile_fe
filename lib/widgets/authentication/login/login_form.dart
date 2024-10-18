@@ -1,5 +1,6 @@
-import 'package:chat_app_mobile_fe/helpers/validating_helper.dart';
-import 'package:chat_app_mobile_fe/services/auth_services.dart';
+import 'package:chat_app_mobile_fe/services/notification.services.dart';
+import 'package:chat_app_mobile_fe/utils/validating.util.dart';
+import 'package:chat_app_mobile_fe/services/auth.services.dart';
 import 'package:chat_app_mobile_fe/widgets/authentication/login/sign_up_link.dart';
 import 'package:flutter/material.dart';
 import 'login_textfield.dart';
@@ -19,16 +20,15 @@ class _LoginFormState extends State<LoginForm> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   double _paddingTop = 0;
   bool _obscureText = true;
+
   @override
   void initState() {
     super.initState();
 
     Future.delayed(const Duration(milliseconds: 200), () {
-      setState(
-        () {
-          _paddingTop = 200;
-        },
-      );
+      setState(() {
+        _paddingTop = 200;
+      });
     });
   }
 
@@ -37,6 +37,7 @@ class _LoginFormState extends State<LoginForm> {
     return AnimatedPadding(
       duration: const Duration(milliseconds: 800),
       padding: EdgeInsets.only(top: _paddingTop),
+      curve: Curves.easeInOut,
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -64,7 +65,7 @@ class _LoginFormState extends State<LoginForm> {
                     controller: _userEmailcontroller,
                     label: 'Tên đăng nhập',
                     hint: 'Nhập email',
-                    validator: ValidatingHelper().validateEmail,
+                    validator: ValidatingUtil().validateEmail,
                   ),
                   const SizedBox(height: 20),
                   LoginTextField(
@@ -72,13 +73,12 @@ class _LoginFormState extends State<LoginForm> {
                     label: 'Mật khẩu',
                     hint: 'Nhập mật khẩu',
                     obscureText: _obscureText,
-                    validator: ValidatingHelper().validatePassword,
+                    validator: ValidatingUtil().validatePassword,
                     toggleObscureText: () {
                       setState(() {
                         _obscureText = !_obscureText;
                       });
                     },
-
                   ),
                   const SizedBox(height: 10),
                   Align(
@@ -107,8 +107,12 @@ class _LoginFormState extends State<LoginForm> {
                   LoginButton(
                     onPressed: () {
                       if (_formkey.currentState!.validate()) {
-                        AuthServices().login(context, _userEmailcontroller.text,
-                            _passwordcontroller.text);
+                        AuthServices()
+                            .login(context, _userEmailcontroller.text,
+                                _passwordcontroller.text)
+                            .then((_) => {
+                                  NotificationServices().saveTokenDevice(),
+                                });
                       }
                     },
                   ),

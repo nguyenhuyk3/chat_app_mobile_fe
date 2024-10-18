@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
-class ValidatingHelper {
+class ValidatingUtil {
   String hashPassword(String password) {
     final bytes = utf8.encode(password);
     final digest = sha256.convert(bytes);
@@ -15,7 +15,6 @@ class ValidatingHelper {
     } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
       return 'Email không hợp lệ';
     }
-
     return null;
   }
 

@@ -9,10 +9,32 @@ class ChatHomeScreen extends StatefulWidget {
 }
 
 class _ChatHomeScreenState extends State<ChatHomeScreen> {
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     print('Received message in foreground: ${message}');
+  //     // Hiển thị alert hoặc banner thông báo trong UI
+  //     showDialog(
+  //       // ignore: use_build_context_synchronously
+  //       context: context,
+  //       builder: (_) => AlertDialog(
+  //         title: Text(message.notification?.title ?? ''),
+  //         content: Text(message.notification?.body ?? ''),
+  //         actions: [
+  //           TextButton(
+  //             child: const Text('OK'),
+  //             onPressed: () => Navigator.of(context).pop(),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const ChatListWidget(),
-    );
+    return const ChatListWidget();
   }
 }

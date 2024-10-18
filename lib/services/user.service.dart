@@ -76,8 +76,7 @@ class UserService {
 
   static Future<List<FriendRequest>> getAllInvitations(String boxType) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    late final type;
+    late final String type;
     late String? invitationBoxId;
 
     switch (boxType) {
@@ -103,19 +102,113 @@ class UserService {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
-        
-        List<dynamic> friendRequestsJson =
-            responseBody['makeFriendRequests']['friendRequests'];
-        List<FriendRequest> friendRequests = friendRequestsJson
-            .map((json) => FriendRequest.fromJson(json))
-            .toList();
 
-        return friendRequests;
+        if (responseBody['makeFriendRequests']['friendRequests'] != null) {
+          List<dynamic> friendRequestsJson =
+              responseBody['makeFriendRequests']['friendRequests'];
+          List<FriendRequest> friendRequests = friendRequestsJson
+              .map((json) => FriendRequest.fromJson(json))
+              .toList();
+
+          return friendRequests;
+        } else {
+          return [];
+        }
       } else {
         throw Exception("Failed to fetch invitations: ${response.statusCode}");
       }
     } catch (error) {
       throw Exception("An error occurred: $error");
+    }
+  }
+
+  static Future<void> deleteSendingInvitation(String toUserEmail) async {
+    String? fromUserEmail = await SharedPreferencesHelper.getUserEmail();
+    String? sendingInvitationBoxId =
+        await SharedPreferencesHelper.getSendingInvitationBoxId();
+    String url =
+        "${GlobalVar.httpBaseUrl}/users/delete_friend_request_for_sending";
+    Map<String, String> request = {
+      "invitationBoxId": sendingInvitationBoxId!,
+      "fromUserEmail": fromUserEmail!,
+      "toUserEmail": toUserEmail,
+    };
+
+    try {
+      var response = await http.post(Uri.parse(url),
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: jsonEncode(request));
+
+      if (response.statusCode == 200) {
+        print('Dữ liệu trả về: ${response.body}');
+      } else {
+        print(
+            'Yêu cầu POST thất bại với mã trạng thái: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Đã xảy ra lỗi: $error');
+    }
+  }
+
+  static Future<void> deleteReceivingInvitation(String toUserEmail) async {
+    String? fromUserEmail = await SharedPreferencesHelper.getUserEmail();
+    String? receivingInvitationBoxId =
+        await SharedPreferencesHelper.getReceivingInvitationBoxId();
+    String url =
+        "${GlobalVar.httpBaseUrl}/users/delete_friend_request_for_receiving";
+    Map<String, String> request = {
+      "invitationBoxId": receivingInvitationBoxId!,
+      "fromUserEmail": fromUserEmail!,
+      "toUserEmail": toUserEmail,
+    };
+
+    try {
+      var response = await http.post(Uri.parse(url),
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: jsonEncode(request));
+
+      if (response.statusCode == 200) {
+        print('Dữ liệu trả về: ${response.body}');
+      } else {
+        print(
+            'Yêu cầu POST thất bại với mã trạng thái: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Đã xảy ra lỗi: $error');
+    }
+  }
+
+  static Future<void> acceptInvitation(String fromUserEmail) async {
+    String? toUserEmail = await SharedPreferencesHelper.getUserEmail();
+    String url = "${GlobalVar.httpBaseUrl}/ws/accept_friend";
+    Map<String, String> request = {
+      "fromUserEmail": fromUserEmail,
+      "fromUserName": "Nguyen Quoc Huy_1",
+      "toUserEmail": toUserEmail!,
+      "toUserName": "Nguyen Quoc Huy_2"
+    };
+
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: jsonEncode(request),
+      );
+
+      if (response.statusCode == 200) {
+        print('Dữ liệu trả về: ${response.body}');
+      } else {
+        print(
+            'Yêu cầu POST thất bại với mã trạng thái: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Đã xảy ra lỗi: $error');
     }
   }
 }
