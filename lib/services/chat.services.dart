@@ -1,8 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:mime/mime.dart';
 
 import 'package:chat_app_mobile_fe/global/global_var.dart';
 import 'package:chat_app_mobile_fe/models/response/message.reponse.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+import 'package:http/http.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ChatServices {
@@ -27,12 +33,12 @@ class ChatServices {
 
         return messageBox;
       } else {
-        print(
+        debugPrint(
             "Lỗi với mã phản hổi là (getMessageBoxById): ${response.statusCode}");
         return [];
       }
     } catch (error) {
-      print("Đã có lỗi xảy ra (getMessageBoxById): ${error}");
+      debugPrint("Đã có lỗi xảy ra (getMessageBoxById): $error");
       return [];
     }
   }
@@ -51,11 +57,93 @@ class ChatServices {
           "receiverId": receiverId,
           "token": token,
           "messageBoxId": messageBoxId,
+          "type": "text",
           "content": content,
         },
       );
-
       channel.sink.add(message);
+    }
+  }
+
+  static Future<String> uploadFile(File file) async {
+    try {
+      const url = "${GlobalVar.httpBaseUrl}/file/upload_file";
+      final MultipartRequest request =
+          http.MultipartRequest('POST', Uri.parse(url));
+
+      request.files.add(await http.MultipartFile.fromPath(
+        // Field name in your API
+        'file',
+        file.path,
+        // Get file name
+        filename: file.uri.pathSegments.last,
+      ));
+
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseData = await http.Response.fromStream(response);
+        var jsonResponse = jsonDecode(responseData.body);
+
+        return jsonResponse['fileUrl'];
+      } else {
+        throw Exception('Failed to upload file');
+      }
+    } catch (e) {
+      debugPrint('Error uploading file: $e');
+      return '';
+    }
+  }
+
+  static Future<String> sendFile({
+    required String senderId,
+    required String receiverId,
+    required String token,
+    required String messageBoxId,
+    required String sendedId,
+    required File file,
+    required WebSocketChannel channel,
+  }) async {
+    try {
+      String fileUrl = await uploadFile(file);
+
+      if (fileUrl.isEmpty) {
+        debugPrint('Upload failed. File URL is empty.');
+        return "";
+      }
+
+      String extension = path.extension(fileUrl).toLowerCase();
+      late String type;
+
+      if (['.mp4', '.mov', '.avi'].contains(extension)) {
+        type = 'video';
+      } else if (['.jpg', '.png', '.jpeg', '.gif'].contains(extension)) {
+        type = 'image';
+      } else if (['.pdf', '.doc', '.docx', '.txt'].contains(extension)) {
+        type = 'document';
+      } else {
+        type = 'unknown';
+      }
+
+      final messageData = jsonEncode({
+        "senderId": senderId,
+        "receiverId": receiverId,
+        "token": token,
+        "messageBoxId": messageBoxId,
+        "type": type,
+        "sendedId": sendedId,
+        "content": fileUrl,
+      });
+
+      channel.sink.add(messageData);
+
+      debugPrint('File metadata sent successfully: $messageData');
+
+      return fileUrl;
+    } catch (e) {
+      debugPrint('Error sending file message: $e');
+
+      return "";
     }
   }
 

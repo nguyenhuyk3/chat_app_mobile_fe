@@ -8,6 +8,8 @@ class CheckDate {
   }
 
   static bool isSameDay(String date1, String date2) {
+    print(date1);
+    print(date2);
     DateTime dateTime1 = DateTime.parse(date1);
     DateTime dateTime2 = DateTime.parse(date2);
 
@@ -15,4 +17,10 @@ class CheckDate {
         dateTime1.month == dateTime2.month &&
         dateTime1.day == dateTime2.day;
   }
+
+  static String formatTime(DateTime dateTime) {
+  final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+  
+  return formatter.format(dateTime);
+}
 }

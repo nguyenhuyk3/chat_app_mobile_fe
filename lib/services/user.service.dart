@@ -184,8 +184,8 @@ class UserService {
 
   static Future<void> acceptInvitation(String fromUserEmail) async {
     String? toUserEmail = await SharedPreferencesHelper.getUserEmail();
-    String url = "${GlobalVar.httpBaseUrl}/ws/accept_friend";
-    Map<String, String> request = {
+    const String url = "${GlobalVar.httpBaseUrl}/ws/accept_friend";
+    final Map<String, String> request = {
       "fromUserEmail": fromUserEmail,
       "fromUserName": "Nguyen Quoc Huy_1",
       "toUserEmail": toUserEmail!,
@@ -202,13 +202,41 @@ class UserService {
       );
 
       if (response.statusCode == 200) {
-        print('Dữ liệu trả về: ${response.body}');
+        print('Return data: ${response.body}');
       } else {
-        print(
-            'Yêu cầu POST thất bại với mã trạng thái: ${response.statusCode}');
+        print('POST request failed with status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Đã xảy ra lỗi: $error');
+      print('An error occurred: $error');
+    }
+  }
+
+  static Future<void> updateMessageBySendedId(
+      {required String messageBoxId,
+      required String sendedId,
+      required String content}) async {
+    const url = "${GlobalVar.httpBaseUrl}/users/update_message_by_sended_id";
+    final Map<String, String> request = {
+      "messageBoxId": messageBoxId,
+      "sendedId": sendedId,
+      "content": content
+    };
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: jsonEncode(request),
+      );
+
+      if (response.statusCode == 200) {
+        print('Return data: ${response.body}');
+      } else {
+        print('POST request failed with status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('An error occurred: $error');
     }
   }
 }

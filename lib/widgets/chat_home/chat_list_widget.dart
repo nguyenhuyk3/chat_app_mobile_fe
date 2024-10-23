@@ -27,13 +27,13 @@ class _ChatListWidgetState extends State<ChatListWidget> {
 
   Future<void> _getMessageBoxes() async {
     String url =
-        "${GlobalVar.httpBaseUrl}/users/get_all_message_boxes?userId=${userId!}";
+        "${GlobalVar.httpBaseUrl}/users/get_all_message_boxes?user_id=${userId!}";
 
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
-
+    
         setState(
           () {
             messageBoxes = MessageBoxResponse.parseJsonDataToList(jsonData);
@@ -41,7 +41,7 @@ class _ChatListWidgetState extends State<ChatListWidget> {
         );
       }
     } catch (error) {
-      print('Có lỗi xảy ra khi lấy messageBoxes (getMessageBox): $error');
+      print('An error occurred while retrieving messageBoxes (getMessageBox): $error');
     }
   }
 
@@ -59,10 +59,10 @@ class _ChatListWidgetState extends State<ChatListWidget> {
         print(jsonData);
       },
       onError: (error) {
-        print('Có lỗi xảy ra: $error');
+        print('An error occurred: $error');
       },
       onDone: () {
-        print('Kết nối đã bị đóng');
+        print('Connection closed');
       },
     );
   }

@@ -2,6 +2,8 @@
     <application
         android:label="chat_app_mobile_fe"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

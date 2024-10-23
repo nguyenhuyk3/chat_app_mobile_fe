@@ -35,7 +35,7 @@ class SettingItems extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChangeAccountInfo(),
+        builder: (context) => const ChangeAccountInfo(),
       ),
     );
   }
