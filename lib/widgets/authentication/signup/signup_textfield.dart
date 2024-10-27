@@ -24,20 +24,8 @@ class SignupTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFE6EBF1),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            offset: Offset(4, 4),
-            blurRadius: 15,
-          ),
-          BoxShadow(
-            color: Colors.white,
-            offset: Offset(-4, -4),
-            blurRadius: 15,
-          ),
-        ],
+        border: Border.all(width: 0.08, color: Colors.white),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: TextFormField(
         controller: controller,
@@ -45,17 +33,18 @@ class SignupTextField extends StatelessWidget {
         obscureText: obscureText,
         keyboardType: TextInputType.text,
         readOnly: readOnly,
+        style: TextStyle(color: Colors.white.withOpacity(0.8)),
         decoration: InputDecoration(
           label: Text(
             label,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 18,
             ),
           ),
           hintText: hint,
-          hintStyle: const TextStyle(color: Colors.black38),
+          hintStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide.none,

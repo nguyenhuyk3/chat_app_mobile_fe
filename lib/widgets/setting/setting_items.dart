@@ -1,5 +1,4 @@
 import 'package:chat_app_mobile_fe/screens/setting/setting_change_password_screen.dart';
-import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_name.dart';
 import 'package:chat_app_mobile_fe/widgets/setting/setting_item.dart';
 import 'package:flutter/material.dart';
 

@@ -10,7 +10,7 @@ class SettingProfileName extends StatefulWidget {
 
 class _SettingProfileNameState extends State<SettingProfileName> {
   String? name; // Biến để lưu tên
-  SettingService _settingService = SettingService();
+  final SettingService _settingService = SettingService();
 
   Future<void> _fetchUserData() async {
     final userData = await _settingService.fetchUserData();

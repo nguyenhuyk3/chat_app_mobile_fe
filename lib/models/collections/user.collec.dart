@@ -76,4 +76,5 @@ class AppUser {
       updatedAt: json['updatedAt'],
     );
   }
+  
 }

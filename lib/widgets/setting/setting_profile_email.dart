@@ -10,7 +10,7 @@ class SettingProfileEmail extends StatefulWidget {
 
 class _SettingProfileEmailState extends State<SettingProfileEmail> {
   String? email; // Biến để lưu email
-  SettingService _settingService = SettingService();
+  final SettingService _settingService = SettingService();
   @override
   void initState() {
     super.initState();

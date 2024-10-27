@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GenderDropdown extends StatefulWidget {
-  final ValueChanged<String?> onChanged; // Thêm callback để truyền giá trị
+  final ValueChanged<String?> onChanged; // Callback để truyền giá trị
   const GenderDropdown({super.key, required this.onChanged});
 
   @override
@@ -13,31 +13,51 @@ class _GenderDropdownState extends State<GenderDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      decoration: InputDecoration(
-        labelText: 'Giới tính',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide.none,
-        ),
-        filled: true,
-        fillColor: const Color(0xFFE6EBF1),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.08, color: Colors.white),
+        borderRadius: BorderRadius.circular(12),
       ),
-      value: selectedGender,
-      onChanged: (String? newValue) {
-        setState(() {
-          selectedGender = newValue;
-        });
-
-        widget.onChanged(newValue);
-      },
-      items:
-          <String>['Nam', 'Nữ'].map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+      child: DropdownButtonFormField<String>(
+        style: const TextStyle(color: Colors.white),
+        decoration: const InputDecoration(
+          labelText: 'Giới tính',
+          labelStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontSize: 18,
+          ),
+          border: OutlineInputBorder(borderSide: BorderSide.none),
+        ),
+        value: selectedGender,
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedGender = newValue;
+          });
+          widget.onChanged(newValue);
+        },
+        alignment: Alignment.bottomCenter,
+        items:
+            <String>['Nam', 'Nữ'].map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value,
+                style: const TextStyle(color: Colors.black)), // Màu chữ cho item
+          );
+        }).toList(),
+        selectedItemBuilder: (BuildContext context) {
+          return <String>['Nam', 'Nữ'].map<Widget>((String value) {
+            return Container(
+              child: Text(
+                value,
+                style: const TextStyle(
+                  color: Colors.white, // Màu chữ cho item đã chọn
+                ),
+              ),
+            );
+          }).toList();
+        },
+      ),
     );
   }
 }

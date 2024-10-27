@@ -19,7 +19,7 @@ class _SettingChangePasswordTextfieldState
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       controller: widget.controller, // Sử dụng controller
       decoration: InputDecoration(
           hintText: widget.hintText,

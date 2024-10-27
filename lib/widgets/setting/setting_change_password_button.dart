@@ -22,7 +22,7 @@ class _SettingChangePasswordButtonState
           border: Border.all(width: 0.08, color: Colors.white)),
       child: TextButton(
         onPressed: widget.onPressed,
-        child: Text(
+        child: const Text(
           'XÁC NHẬN',
           style: TextStyle(
             color: Colors.white,

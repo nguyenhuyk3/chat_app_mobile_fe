@@ -1,6 +1,5 @@
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
 import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
-import 'package:chat_app_mobile_fe/screens/setting/setting_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

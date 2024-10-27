@@ -14,11 +14,23 @@ class _SignupFieldInforScreenState extends State<SignupFieldInforScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bổ sung thông tin'),
+        title: const Text(
+          'Bổ sung thông tin',
+          style: TextStyle(color: Colors.white),
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xE80A2405),
+                Color(0xE8181819),
+                Color(0xE80E1332),
+              ],
+            ),
+          ),
+        ),
       ),
-      body: SignupFieldInfor(
-        eamil: widget.email,
-      ),
+      body: SignupFieldInfor(email: widget.email),
     );
   }
 }

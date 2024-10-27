@@ -1,6 +1,5 @@
 import 'package:chat_app_mobile_fe/widgets/setting/setting_infor.dart';
 import 'package:chat_app_mobile_fe/widgets/setting/setting_items.dart';
-import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_name.dart';
 import 'package:flutter/material.dart';
 
 class MySettingScreen extends StatefulWidget {

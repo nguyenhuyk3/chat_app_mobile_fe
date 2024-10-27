@@ -54,7 +54,7 @@ class _ChatHeaderWidgetState extends State<ChatHeaderWidget> {
               if (value == 'settings') {
                 // Xử lý khi chọn "Cài đặt"
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MySettingScreen()));
+                    MaterialPageRoute(builder: (context) => const MySettingScreen()));
                 // Điều hướng tới màn hình cài đặt (nếu cần)
               } else if (value == 'logout') {
                 // Xử lý khi chọn "Đăng xuất"
