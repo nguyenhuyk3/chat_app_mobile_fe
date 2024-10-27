@@ -1,4 +1,5 @@
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
+import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
 import 'package:chat_app_mobile_fe/services/fcm_service.services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -41,6 +42,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       navigatorKey: _navigatorKey,
       home: const LoginScreen(),
+      routes: <String, WidgetBuilder>{
+        '/home': (BuildContext context) => const ChatHomeScreen(),
+        '/login': (BuildContext context) => const LoginScreen(),
+      },
     );
   }
 }

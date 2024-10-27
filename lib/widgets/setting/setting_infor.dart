@@ -1,3 +1,7 @@
+import 'package:chat_app_mobile_fe/screens/setting/setting_change_profile_screen.dart';
+import 'package:chat_app_mobile_fe/services/setting_service.dart';
+// Đảm bảo đã thêm thư viện Firestore
+// Thêm thư viện Firebase Auth
 import 'package:flutter/material.dart';
 
 class MySettingInfor extends StatefulWidget {
@@ -8,33 +12,63 @@ class MySettingInfor extends StatefulWidget {
 }
 
 class _MySettingInforState extends State<MySettingInfor> {
+  String? _fullName;
+  final SettingService _settingService = SettingService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData(); // Gọi hàm để lấy dữ liệu người dùng
+  }
+
+  Future<void> _fetchUserData() async {
+    // Gọi service để lấy thông tin người dùng
+    final userData = await _settingService.fetchUserData();
+    setState(() {
+      _fullName = userData['fullName']; // Cập nhật tên đầy đủ
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SettingChangeProfileScreen(),
+          ),
+        );
+        await _fetchUserData();
+      },
       child: Container(
         height: 80,
-        decoration: BoxDecoration(
-            border: Border(
-                top: BorderSide(width: 0.08, color: Colors.white),
-                bottom: BorderSide(width: 0.08, color: Colors.white))),
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(width: 0.08, color: Colors.white),
+            bottom: BorderSide(width: 0.08, color: Colors.white),
+          ),
+        ),
         child: Row(
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               backgroundColor: Colors.white,
               maxRadius: 30,
             ),
-            Container(
-              margin: EdgeInsets.only(left: 15),
-              child: const Column(
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Huỳnh Minh Cường',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    _fullName ??
+                        'Người dùng', // Hiển thị tên đầy đủ hoặc "Người dùng" nếu không có
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  Text(
+                  const Text(
                     'Xin chào! đến với Ping ME',
                     style: TextStyle(color: Colors.white60, fontSize: 12),
                     overflow: TextOverflow.ellipsis,
@@ -42,12 +76,10 @@ class _MySettingInforState extends State<MySettingInfor> {
                 ],
               ),
             ),
-            Container(
-                margin: EdgeInsets.only(left: 80),
-                child: Icon(
-                  Icons.arrow_drop_down_circle_outlined,
-                  color: Colors.green,
-                ))
+            const Icon(
+              Icons.arrow_drop_down_circle_outlined,
+              color: Colors.green,
+            ),
           ],
         ),
       ),

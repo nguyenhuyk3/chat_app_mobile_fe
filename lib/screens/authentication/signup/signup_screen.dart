@@ -3,7 +3,9 @@ import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_form.dar
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  final String email;
+
+  const SignupScreen({super.key, required this.email});
 
   @override
   State<StatefulWidget> createState() {
@@ -12,6 +14,8 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final bool _obscureText = true;
+  final bool _obscureTextCF = true;
   double _paddingBottom = 0;
   double _paddingTop = 200;
 
@@ -35,12 +39,14 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          SignupBackground(),
-          SignupForm(),
+          const SignupBackground(),
+          SignupForm(
+            email: widget.email,
+          ),
         ],
       ),
     );

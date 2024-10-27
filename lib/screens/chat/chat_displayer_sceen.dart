@@ -298,7 +298,7 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
                   final bool showUnreadLabel =
                       firstUnreadMessageIndex != null &&
                           index == firstUnreadMessageIndex;
-                          
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

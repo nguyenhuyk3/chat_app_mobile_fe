@@ -1,12 +1,14 @@
-import 'package:chat_app_mobile_fe/utils/validating.util.dart';
+
 import 'package:chat_app_mobile_fe/services/auth.services.dart';
+import 'package:chat_app_mobile_fe/utils/validating.util.dart';
 import 'package:flutter/material.dart';
 import 'signup_button.dart';
 import 'signup_textfield.dart';
-import 'login_link.dart';
 
 class SignupForm extends StatefulWidget {
-  const SignupForm({super.key});
+  final String email; // Thêm biến email
+
+  const SignupForm({super.key, required this.email});
 
   @override
   _SignupFormState createState() => _SignupFormState();
@@ -14,10 +16,9 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
-  final _userNameController = TextEditingController();
-  final _fullNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _controllerUserEmail = TextEditingController();
   bool _obscureText = true;
   bool _obscureTextCF = true;
   double _paddingBottom = 0;
@@ -33,6 +34,7 @@ class _SignupFormState extends State<SignupForm> {
       () {
         setState(
           () {
+            _controllerUserEmail.text = widget.email;
             _paddingBottom = 200;
             // Sau 300ms, đặt padding về giá trị mong muốn
             _paddingTop = 0;
@@ -44,8 +46,8 @@ class _SignupFormState extends State<SignupForm> {
 
   void _register() async {
     if (_formKey.currentState!.validate()) {
-      await AuthServices().registerUser(_userNameController.text,
-          _passwordController.text, _fullNameController.text, context);
+      await AuthServices().registerUser(
+          _controllerUserEmail.text, _passwordController.text, context);
     }
   }
 
@@ -74,20 +76,27 @@ class _SignupFormState extends State<SignupForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 40),
-                  SignupTextField(
-                    controller: _fullNameController,
-                    label: 'Họ và tên',
-                    hint: 'Nhập họ và tên',
-                    obscureText: false,
-                    validator: null,
+                  const Text(
+                    'Bước 3',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 25,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Logo
+                  Image.asset(
+                    'assets/img/logo/logo_2.png',
+                    height: 150,
                   ),
                   const SizedBox(height: 20),
                   SignupTextField(
-                    controller: _userNameController,
+                    controller: _controllerUserEmail,
                     label: 'Tên đăng nhập',
                     hint: 'Nhập email',
                     obscureText: false,
                     validator: ValidatingUtil().validateEmail,
+                    readOnly: true,
                   ),
                   const SizedBox(height: 20),
                   SignupTextField(
@@ -125,19 +134,6 @@ class _SignupFormState extends State<SignupForm> {
                   ),
                   const SizedBox(height: 30),
                   SignupButton(onPressed: _register),
-                  const SizedBox(height: 10),
-                  // Logo
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        'assets/img/logo/logo_2.png',
-                        height: 150,
-                      ),
-                      const LoginLink(),
-                    ],
-                  )
-                  // Link đến màn hình đăng nhập
                 ],
               ),
             ),

@@ -36,22 +36,26 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
           .where('email', isEqualTo: email)
           .get();
       if (querySnapshot.docs.isEmpty) {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Email không tồn tại')),
         );
         return;
       }
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Đã gửi link về mail của bạn!')),
       );
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushReplacement(
+          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
       });
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Lỗi khi gửi mã: $e')),
       );

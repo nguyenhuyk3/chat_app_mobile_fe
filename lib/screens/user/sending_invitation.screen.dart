@@ -105,4 +105,10 @@ class _SendingInvitationScreenState extends State<SendingInvitationScreen> {
       ),
     );
   }
+
+  void _cancelFriendRequest(int index) {
+    // Xử lý hủy lời mời
+    // Có thể cập nhật giao diện ở đây nếu cần
+    print('Đã hủy lời mời tới $index'); // Hoặc hiển thị thông tin cụ thể
+  }
 }

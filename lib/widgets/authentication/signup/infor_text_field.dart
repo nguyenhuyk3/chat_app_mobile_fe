@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SignupTextField extends StatelessWidget {
+class InforTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final String hint;
@@ -9,7 +9,7 @@ class SignupTextField extends StatelessWidget {
   final VoidCallback? toggleObscureText;
   final bool readOnly;
 
-  const SignupTextField({
+  const InforTextField({
     super.key,
     required this.controller,
     required this.label,
@@ -24,20 +24,8 @@ class SignupTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFE6EBF1),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            offset: Offset(4, 4),
-            blurRadius: 15,
-          ),
-          BoxShadow(
-            color: Colors.white,
-            offset: Offset(-4, -4),
-            blurRadius: 15,
-          ),
-        ],
+        border: Border.all(width: 0.08, color: Colors.white),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: TextFormField(
         controller: controller,
@@ -45,18 +33,18 @@ class SignupTextField extends StatelessWidget {
         obscureText: obscureText,
         keyboardType: TextInputType.text,
         readOnly: readOnly,
-        style: TextStyle(color: Colors.black.withOpacity(0.8)),
+        style: TextStyle(color: Colors.white.withOpacity(0.8)),
         decoration: InputDecoration(
           label: Text(
             label,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 18,
             ),
           ),
           hintText: hint,
-          hintStyle: TextStyle(color: Colors.black.withOpacity(0.8)),
+          hintStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide.none,
