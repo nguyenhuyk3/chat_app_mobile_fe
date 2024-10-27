@@ -8,8 +8,6 @@ class CheckDate {
   }
 
   static bool isSameDay(String date1, String date2) {
-    print(date1);
-    print(date2);
     DateTime dateTime1 = DateTime.parse(date1);
     DateTime dateTime2 = DateTime.parse(date2);
 

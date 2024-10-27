@@ -8,7 +8,7 @@ import 'package:chat_app_mobile_fe/services/user.service.dart';
 import 'package:chat_app_mobile_fe/utils/check_date.util.dart';
 import 'package:chat_app_mobile_fe/utils/generator.utl.dart';
 import 'package:chat_app_mobile_fe/widgets/chat_displayer/date_seperator.widget.dart';
-import 'package:chat_app_mobile_fe/widgets/chat_displayer/header.widget.dart';
+import 'package:chat_app_mobile_fe/widgets/chat_displayer/displayer_app_bar.widget.dart';
 import 'package:chat_app_mobile_fe/widgets/chat_displayer/unread_message_seperator.widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -20,12 +20,14 @@ class ChatDisplayerScreen extends StatefulWidget {
   final String receiverId;
   final String token;
   final String userName;
-  const ChatDisplayerScreen(
-      {super.key,
-      required this.receiverId,
-      required this.token,
-      required this.messageBoxId,
-      required this.userName});
+  // final bool isOnline;
+  const ChatDisplayerScreen({
+    super.key,
+    required this.receiverId,
+    required this.token,
+    required this.messageBoxId,
+    required this.userName,
+  });
 
   @override
   State<ChatDisplayerScreen> createState() => _ChatDisplayerScreenState();
@@ -130,7 +132,7 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
       if (jsonData["content"] != GlobalVar.keyJoinRoom) {
         final MessageResponse newMessage = MessageResponse.fromJson(jsonData);
 
-        if (jsonData["senderId"] != userId && firstUnreadMessageIndex != null) {
+        if (firstUnreadMessageIndex != null) {
           firstUnreadMessageIndex = firstUnreadMessageIndex! + 1;
         }
 
@@ -262,7 +264,8 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ChatDisplayerAppBar(
+      appBar: DisplayerAppBarWidget(
+        receiverId: widget.receiverId,
         fullName: widget.userName,
         lastStatus: 'last seen at 12:30 PM',
         onBackPressed: () => Navigator.pop(context),
@@ -271,7 +274,8 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-                './assets/img/app/background_for_chat_displayer.jpg'),
+              './assets/img/app/background_for_chat_displayer.jpg',
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -294,7 +298,7 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
                   final bool showUnreadLabel =
                       firstUnreadMessageIndex != null &&
                           index == firstUnreadMessageIndex;
-
+                          
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

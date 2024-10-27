@@ -34,9 +34,9 @@ class UserInfor {
 
 class LastStateMessage {
   final String userId;
-  final String lastMessage;
-  final String lastTime;
-  final String lastStatus;
+  String lastMessage;
+  String lastTime;
+  String lastStatus;
 
   LastStateMessage(
       {required this.userId,
@@ -111,7 +111,6 @@ class MessageBoxResponse {
 
       return messageBoxes;
     }
-
     return [];
   }
 }

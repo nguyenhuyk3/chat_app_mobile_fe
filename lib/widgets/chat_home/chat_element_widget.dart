@@ -1,18 +1,22 @@
+import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.bloc.dart';
 import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
 import 'package:chat_app_mobile_fe/models/response/all_message_boxes.response.dart';
 import 'package:chat_app_mobile_fe/screens/chat/chat_displayer_sceen.dart';
 import 'package:chat_app_mobile_fe/services/notification.services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatElementWidget extends StatefulWidget {
   final String messageBoxId;
   final String receiverId;
+  final bool isOnline;
   final MessageBoxResponse messageBoxReponse;
 
   const ChatElementWidget({
     super.key,
     required this.messageBoxId,
     required this.receiverId,
+    required this.isOnline,
     required this.messageBoxReponse,
   });
 
@@ -26,6 +30,7 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
   String? _token;
   // state variable to track when pressed
   bool _isTapped = false;
+  late final LastStateMessage _lastStateMessage;
 
   Future<void> _initUserId() async {
     _userId = await SharedPreferencesHelper.getUserId();
@@ -35,10 +40,6 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
     String? tokenOfReceiver = await NotificationServices()
         .getTokenByUserId(userId: widget.receiverId);
     _token = tokenOfReceiver;
-
-    print(_userId);
-    print("concak");
-    print(widget.receiverId);
   }
 
   @override
@@ -51,6 +52,13 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
     _userName = widget.receiverId == widget.messageBoxReponse.firstInforUser.id
         ? widget.messageBoxReponse.firstInforUser.fullName
         : widget.messageBoxReponse.secondInforUser.fullName;
+    print("concaksdjfkl");
+    print(widget.receiverId);
+    print(widget.messageBoxReponse.firstInforUser.id);
+    _lastStateMessage =
+        widget.receiverId == widget.messageBoxReponse.firstInforUser.id
+            ? widget.messageBoxReponse.lastStateMessageForFirstUser
+            : widget.messageBoxReponse.lastStateMessageForSecondUser;
   }
 
   @override
@@ -66,15 +74,23 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
             setState(() {
               _isTapped = false;
             });
+
+            // ignore: use_build_context_synchronously
+            final chatListBloc = context.read<ChatListBloc>();
+
             Navigator.push(
               // ignore: use_build_context_synchronously
               context,
               MaterialPageRoute(
-                builder: (context) => ChatDisplayerScreen(
-                  messageBoxId: widget.messageBoxReponse.messageBoxId,
-                  token: _token!,
-                  receiverId: widget.receiverId,
-                  userName: _userName,
+                builder: (context) => BlocProvider.value(
+                  value: chatListBloc,
+                  child: ChatDisplayerScreen(
+                    messageBoxId: widget.messageBoxReponse.messageBoxId,
+                    token: _token!,
+                    receiverId: widget.receiverId,
+                    userName: _userName,
+                    // isOnline: widget.isOnline,
+                  ),
                 ),
               ),
             );
@@ -99,41 +115,55 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
               ),
             ),
             child: ListTile(
-              leading: const SizedBox(
-                height: double.infinity,
-                child: Icon(
-                  Icons.account_circle_sharp,
-                  color: Color(0xFFF4F6FF),
-                  size: 50,
-                ),
+              leading: Stack(
+                children: [
+                  const SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: Icon(
+                      Icons.account_circle_sharp,
+                      color: Color(0xFFF4F6FF),
+                      size: 50,
+                    ),
+                  ),
+                  if (widget.isOnline)
+                    Positioned(
+                      right: 3,
+                      bottom: 0,
+                      child: Container(
+                        width: 17,
+                        height: 17,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color(0xFF222831),
+                            width: 3,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
               title: Text(
                 _userName,
                 style: const TextStyle(color: Colors.white),
               ),
               subtitle: Text(
-                _userId ==
-                        widget.messageBoxReponse.lastStateMessageForFirstUser
-                            .userId
-                    ? widget.messageBoxReponse.lastStateMessageForFirstUser
-                        .lastMessage
-                    : widget.messageBoxReponse.lastStateMessageForSecondUser
-                        .lastMessage,
-                style: const TextStyle(color: Colors.grey),
+                _lastStateMessage.lastMessage,
+                style: TextStyle(
+                  color: _lastStateMessage.lastStatus == "chưa đọc"
+                      ? Colors.white
+                      : Colors.grey,
+                ),
               ),
               trailing: Text(
-                _userId ==
-                        widget.messageBoxReponse.lastStateMessageForFirstUser
-                            .userId
-                    ? widget
-                        .messageBoxReponse.lastStateMessageForFirstUser.lastTime
-                        .split(" ")[1]
-                        .substring(0, 5)
-                    : widget.messageBoxReponse.lastStateMessageForSecondUser
-                        .lastTime
-                        .split(" ")[1]
-                        .substring(0, 5),
-                style: const TextStyle(color: Colors.grey),
+                _lastStateMessage.lastTime.split(" ")[1].substring(0, 5),
+                style: TextStyle(
+                  color: _lastStateMessage.lastStatus == "chưa đọc"
+                      ? Colors.white
+                      : Colors.grey,
+                ),
               ),
             ),
           );

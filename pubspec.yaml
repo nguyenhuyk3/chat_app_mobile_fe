@@ -52,6 +52,7 @@ dependencies:
   chewie: ^1.5.0
   mime: ^1.0.0
   intl: ^0.18.0
+  flutter_bloc: ^8.1.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

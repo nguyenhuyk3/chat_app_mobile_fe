@@ -16,11 +16,9 @@ class _SendingInvitationScreenState extends State<SendingInvitationScreen> {
     try {
       await UserService.deleteSendingInvitation(toUserEmail);
 
-      setState(
-        () {
-          invitations.removeAt(index);
-        },
-      );
+      setState(() {
+        invitations.removeAt(index);
+      });
 
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
@@ -87,7 +85,7 @@ class _SendingInvitationScreenState extends State<SendingInvitationScreen> {
                     ),
                   ),
                   onTap: () {
-                    print('Đã chọn ${invitation.toUserEmail}');
+                    print('Selected ${invitation.toUserEmail}');
                   },
                 );
               },
