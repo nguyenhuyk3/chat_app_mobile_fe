@@ -144,7 +144,6 @@ class AuthServices {
             'genre': genre,
           },
         });
-
         print('Thông tin người dùng đã được cập nhật thành công!');
       } else {
         print('Không tìm thấy người dùng với email này.');

@@ -1,9 +1,9 @@
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
+import 'package:chat_app_mobile_fe/widgets/authentication/signup/infor_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_button.dart';
 import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_date_field.dart';
-import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_genre_down.dart';
-import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_textfield.dart';
+import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_genre.dart';
 import 'package:chat_app_mobile_fe/services/auth_services.dart';
 
 class SignupFieldInfor extends StatefulWidget {
@@ -17,7 +17,7 @@ class SignupFieldInfor extends StatefulWidget {
 class _SignupFieldInforState extends State<SignupFieldInfor> {
   final _controllerFullname = TextEditingController();
   final _controllerBrithday = TextEditingController();
-  String? selectedGender;
+  String? selectedGender = "Nam"; // Mặc định là "Nam"
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _SignupFieldInforState extends State<SignupFieldInfor> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                SignupTextField(
+                InforTextField(
                   controller: _controllerFullname,
                   label: 'Họ và tên',
                   hint: 'Nhập họ và tên',
@@ -50,7 +50,7 @@ class _SignupFieldInforState extends State<SignupFieldInfor> {
                 const SizedBox(height: 20),
                 SignupDateField(controllerDate: _controllerBrithday),
                 const SizedBox(height: 20),
-                GenderDropdown(
+                GenderRadioButton(
                   onChanged: (gender) {
                     setState(() {
                       selectedGender = gender;
@@ -64,8 +64,7 @@ class _SignupFieldInforState extends State<SignupFieldInfor> {
                       widget.email,
                       _controllerFullname.text,
                       _controllerBrithday.text,
-                      selectedGender ??
-                          "Nam", // Mặc định là "Nam" nếu không chọn
+                      selectedGender ?? "Nam",
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

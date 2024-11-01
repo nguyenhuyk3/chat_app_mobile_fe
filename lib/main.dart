@@ -1,4 +1,5 @@
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
+import 'package:chat_app_mobile_fe/screens/authentication/signup/signup_field_infor_screen.dart';
 import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const LoginScreen(),
+      home: const SignupFieldInforScreen(
+        email: "huynhminhcuong.270403@gmail.com",
+      ),
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => const ChatHomeScreen(),
         '/login': (BuildContext context) => const LoginScreen(),
