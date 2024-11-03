@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:chat_app_mobile_fe/global/global_var.dart';
 import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
@@ -40,7 +42,8 @@ class UserService {
 
         print("Data received (getSendingInvitationBox): $responseData");
       } else {
-        print("Error from server (getSendingInvitationBox): ${response.statusCode}");
+        print(
+            "Error from server (getSendingInvitationBox): ${response.statusCode}");
       }
     } catch (error) {
       print("An error occurred (getSendingInvitationBox): $error");

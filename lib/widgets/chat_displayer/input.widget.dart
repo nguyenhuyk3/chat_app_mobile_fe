@@ -1,6 +1,4 @@
-// chat_input_widget.dart
 import 'dart:io';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +17,7 @@ class InputWidget extends StatelessWidget {
   Future<void> _pickFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result != null && result.files.isNotEmpty) {
-      final file = File(result.files.first.path!);
+      // final file = File(result.files.first.path!);
       await onPickFile();
     }
   }
