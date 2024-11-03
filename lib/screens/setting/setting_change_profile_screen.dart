@@ -1,7 +1,9 @@
 import 'package:chat_app_mobile_fe/services/setting_service.dart';
+import 'package:chat_app_mobile_fe/widgets/modals/form_day_month_year.dart';
 import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_avatar.dart';
 import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_email.dart';
 import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_name.dart';
+import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_birthday.dart'; // Import widget mới
 import 'package:flutter/material.dart';
 
 class SettingChangeProfileScreen extends StatefulWidget {
@@ -14,12 +16,60 @@ class SettingChangeProfileScreen extends StatefulWidget {
 
 class _SettingChangeProfileScreenState
     extends State<SettingChangeProfileScreen> {
-  String? _email;
+  bool _isEditing = false;
+  String name = ""; // Khởi tạo với giá trị mặc định
+  String birthday = ""; // Khởi tạo với giá trị mặc định
+
+  String originalName = ""; // Biến lưu tên ban đầu
+  String originalBirthday = ""; // Biến lưu ngày sinh ban đầu
+
   final SettingService _settingService = SettingService();
+
+  Future<void> _fetchUserData() async {
+    final userData = await _settingService.fetchUserData();
+    setState(() {
+      name = userData['fullName']!;
+      birthday = userData['birthday']!;
+      originalName = name; // Ghi nhận tên ban đầu
+      originalBirthday = birthday; // Ghi nhận ngày sinh ban đầu
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
+  }
+
+  void _toggleEditing() {
+    setState(() {
+      if (_isEditing) {
+        // Khi hủy chỉnh sửa, khôi phục giá trị ban đầu
+        name = originalName;
+        birthday = originalBirthday;
+      } else {
+        // Khi bắt đầu chỉnh sửa, ghi nhận các giá trị ban đầu
+        originalName = name;
+        originalBirthday = birthday;
+      }
+      _isEditing = !_isEditing; // Chuyển đổi trạng thái
+    });
+  }
+
+  void _editName() {
+    _settingService.editName(context, name, (newName) {
+      setState(() {
+        name = newName; // Cập nhật tên mới
+      });
+    });
+  }
+
+  void _showDatePicker() {
+    _settingService.showDatePicker(context, birthday, (date) {
+      setState(() {
+        birthday = date; // Cập nhật giá trị birthday
+      });
+    });
   }
 
   @override
@@ -39,14 +89,46 @@ class _SettingChangeProfileScreenState
         ),
       ),
       body: Container(
-        child: const SingleChildScrollView(
+        decoration: const BoxDecoration(),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              SettingProfileAvatar(),
-              SizedBox(height: 20),
-              SettingProfileName(), // Truyền fullName
-              SizedBox(height: 10),
-              SettingProfileEmail(), // Truyền email
+              const SettingProfileAvatar(),
+              const SizedBox(height: 20),
+              const SettingProfileEmail(),
+              const SizedBox(height: 10),
+              SettingProfileName(
+                name: name,
+                isEditing: _isEditing,
+                onEdit: _editName,
+              ),
+              const SizedBox(height: 10),
+              SettingProfileBirthday(
+                // Sử dụng widget SettingProfileBirthday
+                birthday: birthday,
+                isEditing: _isEditing,
+                onEdit: _showDatePicker,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    onPressed: _toggleEditing,
+                    child: Text(
+                      _isEditing ? 'Hủy chỉnh sửa' : 'Thay đổi thông tin',
+                      style: const TextStyle(color: Colors.green),
+                    ),
+                  ),
+                  if (_isEditing)
+                    TextButton(
+                      onPressed: () {}, // Cập nhật logic lưu ở đây
+                      child: const Text(
+                        "Lưu",
+                        style: TextStyle(color: Colors.green),
+                      ),
+                    ),
+                ],
+              )
             ],
           ),
         ),

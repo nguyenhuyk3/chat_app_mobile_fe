@@ -1,3 +1,4 @@
+import 'package:chat_app_mobile_fe/widgets/modals/form_day_month_year.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class SettingService {
         final userDocument = querySnapshot.docs.first; // Lấy tài liệu đầu tiên
         return {
           'fullName': userDocument.data()['information']['fullName'],
+          'birthday': userDocument.data()['information']['dateOfBirth'],
           'email': currentUser.email,
         };
       }
@@ -75,5 +77,61 @@ class SettingService {
         print('Lỗi: ${e.message}');
       }
     }
+  }
+
+  Future<void> editName(BuildContext context, String currentName,
+      Function(String) onNameUpdated) async {
+    TextEditingController controller = TextEditingController(text: currentName);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Chỉnh sửa tên'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: "Nhập tên mới"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () {
+                String newName = controller.text; // Lấy tên mới
+                if (newName.isNotEmpty) {
+                  onNameUpdated(newName); // Gọi callback để cập nhật tên
+                }
+                Navigator.of(context).pop();
+              },
+              child: const Text('Lưu'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showDatePicker(BuildContext context, String currentBirthday,
+      Function(String) onDateSelected) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: FormSelectDayMonthYear(
+            onDateSelected: (date) {
+              onDateSelected(date); // Gọi callback để thông báo ngày đã chọn
+              Navigator.pop(context);
+            },
+            initialDate:
+                currentBirthday, // Gán giá trị birthday vào initialDate
+          ),
+        );
+      },
+    );
   }
 }
