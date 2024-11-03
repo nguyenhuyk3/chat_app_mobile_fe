@@ -1,11 +1,8 @@
-import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.bloc.dart';
-import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.event.dart';
-import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.state.dart';
+
 import 'package:chat_app_mobile_fe/screens/chat/chat_displayer_sceen.dart';
 import 'package:chat_app_mobile_fe/widgets/home/notification.widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FCMService {
   final GlobalKey<NavigatorState> _navigatorKey;

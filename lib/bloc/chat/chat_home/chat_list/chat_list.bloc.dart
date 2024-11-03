@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.event.dart';
 import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.state.dart';
 import 'package:chat_app_mobile_fe/global/global_var.dart';

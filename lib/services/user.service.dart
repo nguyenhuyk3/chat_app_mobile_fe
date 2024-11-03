@@ -243,4 +243,118 @@ class UserService {
       print('An error occurred: $error');
     }
   }
+
+  static Future<List<String>> loadAllFriendEmails(String userId) async {
+    final String url =
+        "${GlobalVar.httpBaseUrl}/users/get_all_friend_email_by_id?user_id=$userId";
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        List<dynamic> friendEmailsJson = responseBody['friendEmails'];
+        List<String> friendEmails =
+            friendEmailsJson.map((email) => email.toString()).toList();
+
+        return friendEmails;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      print('An error occurred (loadAllFriendEmails): $error');
+      return [];
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getInformationByEmail(
+      String email) async {
+    final String url =
+        "${GlobalVar.httpBaseUrl}/users/get_information_by_email?email=$email";
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final information = data['information'] as Map<String, dynamic>?;
+        if (information != null) {
+          return {
+            'email': information['email'] ?? '',
+            'fullName': information['fullName'] ?? ''
+          };
+        }
+      } else {
+        return null;
+      }
+    } catch (error) {
+      print('An error occurred (loadAllFriendEmails): $error');
+      return null;
+    }
+  }
+
+  static Future<List<String>?> getEmailsFromInvitationBox(
+      String invitationBoxType, String invitationBoxId) async {
+    final String url =
+        "${GlobalVar.httpBaseUrl}/users/get_emails_from_invitation_box?invitation_box_type=$invitationBoxType&invitation_box_id=$invitationBoxId";
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        List<dynamic> friendEmailsJson = responseBody['emails'];
+        List<String> emails =
+            friendEmailsJson.map((email) => email.toString()).toList();
+
+        print("cọndflkja");
+        print(emails);
+
+        return emails;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      print('An error occurred (loadAllFriendEmails): $error');
+      return null;
+    }
+  }
+
+  static Future<bool> addFriend(
+      {required String fromUserEmail,
+      required String userId,
+      required String toUserEmail}) async {
+    final String getFullNameUrl =
+        "${GlobalVar.httpBaseUrl}/users/get_full_name_by_id?user_id=$userId";
+    try {
+      final response = await http.get(Uri.parse(getFullNameUrl));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        final String fullName = responseBody["fullName"];
+        const makeFriendUrl = "${GlobalVar.httpBaseUrl}/users/make_friend";
+        final requestBody = {
+          "fromUserInfor": {
+            "fromUserEmail": fromUserEmail,
+            "fromUserName": fullName
+          },
+          "toUserEmail": toUserEmail,
+          "status": "pending"
+        };
+        final makeFriendResponse = await http.post(
+          Uri.parse(makeFriendUrl),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(requestBody),
+        );
+
+        if (makeFriendResponse.statusCode == 200) {
+          print("Friend request sent successfully!");
+          return true;
+        } else {
+          print(
+              'Failed to send friend request. Status code: ${makeFriendResponse.statusCode}');
+          return false;
+        }
+      } else {
+        print('Failed to get full name. Status code: ${response.statusCode}');
+        return false;
+      }
+    } catch (error) {
+      print('An error occurred (addFriend): $error');
+      return false;
+    }
+  }
 }

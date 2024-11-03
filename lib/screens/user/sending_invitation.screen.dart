@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, unused_element
+
 import 'package:chat_app_mobile_fe/models/friend_request.dart';
 import 'package:chat_app_mobile_fe/services/user.service.dart';
 import 'package:flutter/material.dart';

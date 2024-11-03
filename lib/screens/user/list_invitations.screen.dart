@@ -1,5 +1,4 @@
 import 'package:chat_app_mobile_fe/screens/user/receiving_invitation.screen.dart';
-import 'package:chat_app_mobile_fe/screens/user/sending_invitation.screen.dart';
 import 'package:flutter/material.dart';
 
 class ListInvitationsScreen extends StatefulWidget {

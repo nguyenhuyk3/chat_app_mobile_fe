@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:math';
 
 import 'package:chat_app_mobile_fe/screens/authentication/signup/signup_verify_code_screen.dart';

@@ -11,6 +11,7 @@ class SignupForm extends StatefulWidget {
   const SignupForm({super.key, required this.email});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SignupFormState createState() => _SignupFormState();
 }
 

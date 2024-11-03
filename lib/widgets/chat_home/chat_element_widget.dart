@@ -65,13 +65,7 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
       BlocProvider.of<ChatListBloc>(context).stream.listen((state) {
         if (state is ChatLoaded) {
           if (widget.receiverId == state.onlineUserId) {
-            print("lkajslkfjlskfksdf");
-            print(widget.receiverId);
-            print(state.onlineUserId);
-            _initTokenOfReceiver().then((_) => {
-                  print("lkajslkfjlskfksdf"),
-                  print(_token),
-                });
+            _initTokenOfReceiver().then((_) => {});
           }
         }
       });

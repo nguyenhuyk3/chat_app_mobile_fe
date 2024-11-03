@@ -12,6 +12,7 @@ class EnterEmailForm extends StatefulWidget {
     required this.formKey,
   });
   @override
+  // ignore: library_private_types_in_public_api
   _EnterEmailFormState createState() => _EnterEmailFormState();
 }
 

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
 import 'package:chat_app_mobile_fe/services/auth.services.dart';
 import 'package:chat_app_mobile_fe/widgets/authentication/signup/infor_text_field.dart';
@@ -5,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_button.dart';
 import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_date_field.dart';
 import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_genre_down.dart';
-import 'package:chat_app_mobile_fe/widgets/authentication/signup/signup_textfield.dart';
 
 class SignupFieldInfor extends StatefulWidget {
   final String email;
