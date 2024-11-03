@@ -9,6 +9,7 @@ import 'package:chat_app_mobile_fe/utils/check_date.util.dart';
 import 'package:chat_app_mobile_fe/utils/generator.utl.dart';
 import 'package:chat_app_mobile_fe/widgets/chat_displayer/date_seperator.widget.dart';
 import 'package:chat_app_mobile_fe/widgets/chat_displayer/displayer_app_bar.widget.dart';
+import 'package:chat_app_mobile_fe/widgets/chat_displayer/input.widget.dart';
 import 'package:chat_app_mobile_fe/widgets/chat_displayer/unread_message_seperator.widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -18,7 +19,7 @@ import 'package:chat_app_mobile_fe/widgets/chat_displayer/message_bubble/message
 class ChatDisplayerScreen extends StatefulWidget {
   final String messageBoxId;
   final String receiverId;
-  final String token;
+  final String? token;
   final String userName;
   // final bool isOnline;
   const ChatDisplayerScreen({
@@ -163,13 +164,14 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
     });
   }
 
-  void _sendMessage({required String content}) {
+  void _sendMessage({required String content, String? type}) {
     ChatServices.sendMessage(
         senderId: userId!,
         receiverId: widget.receiverId,
         token: widget.token,
         messageBoxId: widget.messageBoxId,
         content: content,
+        type: type,
         channel: channel);
 
     messageController.clear();
@@ -218,6 +220,9 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
       setState(() {
         messages[messages.length - sendedPosition - 1] = updatedMessage;
       });
+
+      await Future.delayed(const Duration(milliseconds: 100));
+      setState(() {});
     } catch (e) {
       print('Error sending file: $e');
     }
@@ -318,61 +323,13 @@ class _ChatDisplayerScreenState extends State<ChatDisplayerScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            // Input
-            Container(
-              color: Colors.transparent,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.attach_file,
-                      color: Color(0xFFB7B7B7),
-                    ),
-                    onPressed: _pickFile,
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: messageController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: 'Nhắn tin',
-                        hintStyle: const TextStyle(color: Color(0xFFB7B7B7)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: const Color(0xFF31363F),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
-                        prefixIcon: IconButton(
-                          icon: const Icon(
-                            Icons.emoji_emotions,
-                            color: Color(0xFFB7B7B7),
-                          ),
-                          onPressed: () {},
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  FloatingActionButton(
-                    onPressed: () => {
-                      _sendMessage(
-                        content: messageController.text,
-                      ),
-                    },
-                    backgroundColor: const Color(0xFF00FF9C),
-                    mini: true,
-                    child: const Icon(
-                      Icons.send,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
+            // Sử dụng ChatInputWidget
+            InputWidget(
+              messageController: messageController,
+              onSendMessage: (content, type) {
+                _sendMessage(content: content, type: type);
+              },
+              onPickFile: _pickFile,
             ),
           ],
         ),

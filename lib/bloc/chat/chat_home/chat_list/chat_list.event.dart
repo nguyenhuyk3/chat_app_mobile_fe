@@ -13,8 +13,9 @@ class UpdateOnlineFriends extends ChatListEvent {
 class UpdateFriendStatus extends ChatListEvent {
   final String userId;
   final bool isOnline;
+  final String tokenDevice;
 
-  UpdateFriendStatus(this.userId, this.isOnline);
+  UpdateFriendStatus({required  this.userId,required this.isOnline, required this.tokenDevice});
 }
 
 class UpdateLastStateForMessageBox extends ChatListEvent {
@@ -22,4 +23,11 @@ class UpdateLastStateForMessageBox extends ChatListEvent {
 
   UpdateLastStateForMessageBox(
       {required this.lastStateForMessageBoxOnMasterRoom});
+}
+
+class MarkMessageAsRead extends ChatListEvent {
+  final String messageBoxId;
+  final String userId;
+
+  MarkMessageAsRead({required this.messageBoxId, required this.userId});
 }

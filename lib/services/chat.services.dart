@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:mime/mime.dart';
-
 import 'package:chat_app_mobile_fe/global/global_var.dart';
 import 'package:chat_app_mobile_fe/models/response/message.reponse.dart';
 import 'package:flutter/foundation.dart';
@@ -46,9 +44,10 @@ class ChatServices {
   static void sendMessage(
       {required String senderId,
       required String receiverId,
-      required String token,
+      required String? token,
       required String messageBoxId,
       required String content,
+      required String? type,
       required WebSocketChannel channel}) {
     if (content.isNotEmpty) {
       final message = jsonEncode(
@@ -57,7 +56,7 @@ class ChatServices {
           "receiverId": receiverId,
           "token": token,
           "messageBoxId": messageBoxId,
-          "type": "text",
+          "type": type ??= "text",
           "content": content,
         },
       );
@@ -98,7 +97,7 @@ class ChatServices {
   static Future<String> sendFile({
     required String senderId,
     required String receiverId,
-    required String token,
+    required String? token,
     required String messageBoxId,
     required String sendedId,
     required File file,
@@ -163,13 +162,13 @@ class ChatServices {
           body: jsonEncode(request));
 
       if (response.statusCode == 200) {
-        print('Dữ liệu trả về: ${response.body}');
+        print('Retuned data: ${response.body}');
       } else {
         print(
-            'Yêu cầu POST thất bại với mã trạng thái: ${response.statusCode}');
+            'Request post failing post with the status code: ${response.statusCode}');
       }
     } catch (error) {
-      print('Đã xảy ra lỗi (readUnreadMessages): $error');
+      print('Error occurs (readUnreadMessages): $error');
     }
   }
 }

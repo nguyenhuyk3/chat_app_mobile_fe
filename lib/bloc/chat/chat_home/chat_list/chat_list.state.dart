@@ -7,6 +7,10 @@ class ChatInitial extends ChatListState {}
 class ChatLoaded extends ChatListState {
   final List<MessageBoxResponse> messageBoxes;
   final Set<String> onlineFriendIds;
+  final String? onlineUserId;
 
-  ChatLoaded({required this.messageBoxes, required this.onlineFriendIds});
+  ChatLoaded(
+      {required this.messageBoxes,
+      required this.onlineFriendIds,
+      this.onlineUserId});
 }

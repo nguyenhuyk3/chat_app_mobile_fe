@@ -110,9 +110,8 @@ class _LoginFormState extends State<LoginForm> {
                         AuthServices()
                             .login(context, _userEmailcontroller.text,
                                 _passwordcontroller.text)
-                            .then((_) => {
-                                  NotificationServices().saveTokenDevice(),
-                                });
+                            .then((_) =>
+                                {NotificationServices().saveTokenDevice()});
                       }
                     },
                   ),

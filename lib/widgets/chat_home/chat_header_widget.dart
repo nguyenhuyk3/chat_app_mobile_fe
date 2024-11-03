@@ -1,4 +1,7 @@
+import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
 import 'package:chat_app_mobile_fe/screens/setting/setting_screen.dart';
+import 'package:chat_app_mobile_fe/services/auth.services.dart';
+import 'package:chat_app_mobile_fe/services/notification.services.dart';
 import 'package:chat_app_mobile_fe/widgets/chat_home/search_bar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +22,7 @@ class _ChatHeaderWidgetState extends State<ChatHeaderWidget> {
     return AppBar(
       // hide back arrow
       // automaticallyImplyLeading: false,
-
       backgroundColor: const Color(0xFF0F181D),
-
       elevation: 1,
       title: _isSearching
           ? SearchBarWidget(searchController: _searchController)
@@ -61,12 +62,14 @@ class _ChatHeaderWidgetState extends State<ChatHeaderWidget> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const MySettingScreen()));
-                // Điều hướng tới màn hình cài đặt (nếu cần)
               } else if (value == 'logout') {
-                // Xử lý khi chọn "Đăng xuất"
-                FirebaseAuth.instance.signOut();
+                Future.wait([
+                  AuthServices().logout(),
+                  NotificationServices().deleteToken(),
+                  FirebaseAuth.instance.signOut(),
+                  SharedPreferencesHelper.clearAllSharedPreferences(),
+                ]);
                 Navigator.pushReplacementNamed(context, '/login');
-                // Thực hiện đăng xuất tại đây
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[

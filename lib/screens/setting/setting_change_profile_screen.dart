@@ -1,4 +1,3 @@
-import 'package:chat_app_mobile_fe/services/setting_service.dart';
 import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_avatar.dart';
 import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_email.dart';
 import 'package:chat_app_mobile_fe/widgets/setting/setting_profile_name.dart';
@@ -14,9 +13,6 @@ class SettingChangeProfileScreen extends StatefulWidget {
 
 class _SettingChangeProfileScreenState
     extends State<SettingChangeProfileScreen> {
-  String? _email;
-  final SettingService _settingService = SettingService();
-
   @override
   void initState() {
     super.initState();

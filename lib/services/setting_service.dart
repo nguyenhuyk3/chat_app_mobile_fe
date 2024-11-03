@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:chat_app_mobile_fe/global/global_var.dart';
+import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class SettingService {
   Future<Map<String, String?>> fetchUserData() async {
@@ -26,30 +31,28 @@ class SettingService {
   }
 
   Future<void> updateFullName(String fullName) async {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      // Tìm tài liệu theo email
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('email', isEqualTo: currentUser.email)
-          .get();
-
-      // Kiểm tra xem có tài liệu nào không
-      if (snapshot.docs.isNotEmpty) {
-        DocumentReference userDoc =
-            snapshot.docs.first.reference; // Lấy tài liệu đầu tiên
-        await userDoc.update({
-          'information': {
-            'fullName': fullName,
-          },
-        }).catchError((error) {
-          print("Cập nhật tên thất bại: $error");
-        });
+    final String? userId = await SharedPreferencesHelper.getUserId();
+    const String url = "${GlobalVar.httpBaseUrl}/users/update_information";
+    final Map<String, String> request = {
+      "userId": userId!,
+      "fullName": fullName,
+    };
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: jsonEncode(request),
+      );
+      if (response.statusCode == 200) {
+        print('Returned data (updateFullName): ${response.body}');
       } else {
-        print("Không tìm thấy người dùng với email: ${currentUser.email}");
+        print(
+            'POST request failed with status code (updateFullName): ${response.statusCode}');
       }
-    } else {
-      print("Người dùng chưa đăng nhập.");
+    } catch (error) {
+      print('An error occurred (updateFullName): $error');
     }
   }
 

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:chat_app_mobile_fe/global/global_var.dart';
 import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
 import 'package:chat_app_mobile_fe/models/friend_request.dart';
@@ -16,7 +15,6 @@ class UserService {
         final responseBody = jsonDecode(response.body);
 
         String userId = responseBody["userId"];
-
         SharedPreferencesHelper.saveUserIdAndEmail(userId, email);
       }
     } catch (e) {
@@ -40,16 +38,16 @@ class UserService {
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
 
-        print("Dữ liệu nhận được: $responseData");
+        print("Data received (getSendingInvitationBox): $responseData");
       } else {
-        print("Lỗi từ máy chủ: ${response.statusCode}");
+        print("Error from server (getSendingInvitationBox): ${response.statusCode}");
       }
     } catch (error) {
-      print("Đã xảy ra lỗi: $error");
+      print("An error occurred (getSendingInvitationBox): $error");
     }
   }
 
-  static void saveAllIdsIntoSP(String email) async {
+  static Future<void> saveAllIdsIntoSP(String email) async {
     final url = "${GlobalVar.httpBaseUrl}/users/get_sub_ids?email=$email";
 
     try {
@@ -62,10 +60,13 @@ class UserService {
         String receivingInvitationId = responseData["receivingInvitationId"];
         String sendingInvitationId = responseData["sendingInvitationId"];
 
-        SharedPreferencesHelper.saveUserIdAndEmail(userId, email);
-        SharedPreferencesHelper.saveReceivingInvitationBoxId(
-            receivingInvitationId);
-        SharedPreferencesHelper.saveSendingInvitationBoxId(sendingInvitationId);
+        await Future.wait([
+          SharedPreferencesHelper.saveUserIdAndEmail(userId, email),
+          SharedPreferencesHelper.saveReceivingInvitationBoxId(
+              receivingInvitationId),
+          SharedPreferencesHelper.saveSendingInvitationBoxId(
+              sendingInvitationId),
+        ]);
       } else {
         print("Lỗi từ máy chủ: ${response.statusCode}");
       }

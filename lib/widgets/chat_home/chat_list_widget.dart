@@ -26,6 +26,7 @@ class ChatListWidget extends StatelessWidget {
                           : state.messageBoxes[index].secondInforUser.id;
 
                   return ChatElementWidget(
+                    key: ValueKey(state.messageBoxes[index].messageBoxId),
                     messageBoxId: state.messageBoxes[index].messageBoxId,
                     receiverId: notCurrentUserId,
                     isOnline: state.onlineFriendIds.contains(notCurrentUserId),

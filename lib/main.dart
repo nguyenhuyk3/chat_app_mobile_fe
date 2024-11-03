@@ -1,9 +1,12 @@
+import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.bloc.dart';
 import 'package:chat_app_mobile_fe/screens/authentication/login/login_screen.dart';
 import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
-import 'package:chat_app_mobile_fe/services/fcm_service.services.dart';
+import 'package:chat_app_mobile_fe/services/fcm.services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 
@@ -33,19 +36,24 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    _fcmService = FCMService();
+    _fcmService = FCMService(navigatorKey: _navigatorKey);
     _fcmService.setupFCM(_navigatorKey);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: _navigatorKey,
-      home: const LoginScreen(),
-      routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => const ChatHomeScreen(),
-        '/login': (BuildContext context) => const LoginScreen(),
-      },
+    return MultiProvider(
+      providers: [
+        BlocProvider(create: (context) => ChatListBloc()),
+      ],
+      child: MaterialApp(
+        navigatorKey: _navigatorKey,
+        home: const LoginScreen(),
+        routes: <String, WidgetBuilder>{
+          '/home': (BuildContext context) => const ChatHomeScreen(),
+          '/login': (BuildContext context) => const LoginScreen(),
+        },
+      ),
     );
   }
 }

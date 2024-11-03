@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:chat_app_mobile_fe/global/global_var.dart';
 import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
 import 'package:chat_app_mobile_fe/models/collections/user.collec.dart';
 import 'package:chat_app_mobile_fe/models/information.dart';
@@ -9,13 +12,14 @@ import 'package:chat_app_mobile_fe/services/user.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> registerUser(String email, String password, 
-      BuildContext context) async {
+  Future<void> registerUser(
+      String email, String password, BuildContext context) async {
     try {
       UserCredential _ = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -166,8 +170,10 @@ class AuthServices {
         const SnackBar(content: Text('Đăng nhập thành công!')),
       );
 
-      SharedPreferencesHelper.saveLogin();
-      UserService.saveAllIdsIntoSP(email);
+      await Future.wait([
+        SharedPreferencesHelper.saveLogin(),
+        UserService.saveAllIdsIntoSP(email),
+      ]);
 
       Navigator.pushReplacement(
           // ignore: use_build_context_synchronously
@@ -232,6 +238,27 @@ class AuthServices {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Lỗi khi gửi mã: $e')),
       );
+    }
+  }
+
+  Future<void> logout() async {
+    String? userId = await SharedPreferencesHelper.getUserId();
+    const url = "${GlobalVar.httpBaseUrl}/ws/logout";
+    final Map<String, String> request = {"userId": userId!};
+    try {
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: jsonEncode(request));
+      if (response.statusCode == 200) {
+        print('Returned data: ${response.body}');
+      } else {
+        print(
+            'Request post failing post with the status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error occurs (logout): $error');
     }
   }
 }

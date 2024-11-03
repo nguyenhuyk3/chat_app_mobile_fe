@@ -1,42 +1,38 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
-  static void saveLogin() async {
+  static Future<void> saveLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-
     await pref.setBool('isLoggedIn', true);
   }
 
-  static void saveSendingInvitationBoxId(String id) async {
+  static Future<void> saveSendingInvitationBoxId(String id) async {
     if (id == "") {
       return;
     }
 
     SharedPreferences pref = await SharedPreferences.getInstance();
-
     await pref.setString("sendingInvitationBoxId", id);
   }
 
-  static void saveReceivingInvitationBoxId(String id) async {
+  static Future<void> saveReceivingInvitationBoxId(String id) async {
     if (id == "") {
       return;
     }
 
     SharedPreferences pref = await SharedPreferences.getInstance();
-
     await pref.setString("receivingInvitationBoxId", id);
   }
 
-  static void saveUserIdAndEmail(String id, String email) async {
+  static Future<void> saveUserIdAndEmail(String id, String email) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
     await pref.setString("userId", id);
     await pref.setString("userEmail", email);
   }
 
-  static void saveTokenDevice(String token) async {
+  static Future<void> saveTokenDevice(String token) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-
     await pref.setString("tokenDevice", token);
   }
 
@@ -73,5 +69,10 @@ class SharedPreferencesHelper {
     String? token = pref.getString("tokenDevice");
 
     return token;
+  }
+
+  static Future<void> clearAllSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 }

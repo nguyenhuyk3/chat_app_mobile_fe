@@ -52,7 +52,7 @@ class BottomNavigationBarItems extends StatelessWidget {
                   _selectedIndex == 1 ? const Color(0xFF10375C) : const Color(0xFFF4F6FF),
             ),
           ),
-          label: 'Kết bạn',
+          label: 'Lời mời kết bạn',
         ),
         BottomNavigationBarItem(
           icon: Container(

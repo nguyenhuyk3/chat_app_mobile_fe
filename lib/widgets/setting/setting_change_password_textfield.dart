@@ -22,13 +22,15 @@ class _SettingChangePasswordTextfieldState
       style: const TextStyle(color: Colors.white),
       controller: widget.controller, // Sử dụng controller
       decoration: InputDecoration(
-          hintText: widget.hintText,
-          hintStyle: const TextStyle(color: Colors.white70),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(width: 0.08, color: Colors.white)),
-          filled: true,
-          fillColor: const Color.fromARGB(255, 3, 20, 51)),
+        hintText: widget.hintText,
+        hintStyle: const TextStyle(color: Colors.white70),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(width: 0.08, color: Colors.white),
+        ),
+        filled: true,
+        fillColor: const Color.fromARGB(255, 3, 20, 51),
+      ),
       obscureText: true,
     );
   }

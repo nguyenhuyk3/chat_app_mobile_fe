@@ -25,7 +25,6 @@ class DisplayerAppBarWidget extends StatelessWidget
       builder: (context, state) {
         bool isOnline =
             state is ChatLoaded && state.onlineFriendIds.contains(receiverId);
-
         return AppBar(
           backgroundColor: const Color(0xFF31363F),
           elevation: 1,

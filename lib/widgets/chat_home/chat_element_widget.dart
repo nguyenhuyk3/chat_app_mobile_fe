@@ -1,4 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.bloc.dart';
+import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.event.dart';
+import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.state.dart';
 import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
 import 'package:chat_app_mobile_fe/models/response/all_message_boxes.response.dart';
 import 'package:chat_app_mobile_fe/screens/chat/chat_displayer_sceen.dart';
@@ -52,122 +56,155 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
     _userName = widget.receiverId == widget.messageBoxReponse.firstInforUser.id
         ? widget.messageBoxReponse.firstInforUser.fullName
         : widget.messageBoxReponse.secondInforUser.fullName;
-    print("concaksdjfkl");
-    print(widget.receiverId);
-    print(widget.messageBoxReponse.firstInforUser.id);
-    _lastStateMessage =
-        widget.receiverId == widget.messageBoxReponse.firstInforUser.id
-            ? widget.messageBoxReponse.lastStateMessageForFirstUser
-            : widget.messageBoxReponse.lastStateMessageForSecondUser;
+    _lastStateMessage = widget.receiverId ==
+            widget.messageBoxReponse.lastStateMessageForFirstUser.userId
+        ? widget.messageBoxReponse.lastStateMessageForSecondUser
+        : widget.messageBoxReponse.lastStateMessageForFirstUser;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<ChatListBloc>(context).stream.listen((state) {
+        if (state is ChatLoaded) {
+          if (widget.receiverId == state.onlineUserId) {
+            print("lkajslkfjlskfksdf");
+            print(widget.receiverId);
+            print(state.onlineUserId);
+            _initTokenOfReceiver().then((_) => {
+                  print("lkajslkfjlskfksdf"),
+                  print(_token),
+                });
+          }
+        }
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isTapped = true;
-        });
-        Future.delayed(
-          const Duration(milliseconds: 200),
-          () {
-            setState(() {
-              _isTapped = false;
-            });
+    final chatListBloc = context.read<ChatListBloc>();
 
-            // ignore: use_build_context_synchronously
-            final chatListBloc = context.read<ChatListBloc>();
+    return BlocProvider.value(
+      value: chatListBloc,
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _isTapped = true;
+          });
 
-            Navigator.push(
-              // ignore: use_build_context_synchronously
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider.value(
-                  value: chatListBloc,
-                  child: ChatDisplayerScreen(
-                    messageBoxId: widget.messageBoxReponse.messageBoxId,
-                    token: _token!,
-                    receiverId: widget.receiverId,
-                    userName: _userName,
-                    // isOnline: widget.isOnline,
+          context.read<ChatListBloc>().add(MarkMessageAsRead(
+              messageBoxId: widget.messageBoxId, userId: _userId!));
+
+          Future.delayed(
+            const Duration(milliseconds: 200),
+            () {
+              setState(() {
+                _isTapped = false;
+              });
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider.value(
+                    value: chatListBloc,
+                    child: ChatDisplayerScreen(
+                      messageBoxId: widget.messageBoxReponse.messageBoxId,
+                      token: _token,
+                      receiverId: widget.receiverId,
+                      userName: _userName,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: _isTapped ? 1.0 : 0.0),
+          duration: const Duration(milliseconds: 200),
+          builder: (context, position, child) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: const [
+                    Colors.white30,
+                    Color(0xFF222831),
+                  ],
+                  stops: [position, position],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+              ),
+              child: ListTile(
+                leading: Stack(
+                  children: [
+                    const SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: Icon(
+                        Icons.account_circle_sharp,
+                        color: Color(0xFFF4F6FF),
+                        size: 50,
+                      ),
+                    ),
+                    if (widget.isOnline)
+                      Positioned(
+                        right: 3,
+                        bottom: 0,
+                        child: Container(
+                          width: 17,
+                          height: 17,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFF222831),
+                              width: 3,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                title: Text(
+                  _userName,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                subtitle: Row(
+                  children: [
+                    Icon(
+                      Icons.check,
+                      size: 17,
+                      color: _lastStateMessage.lastStatus == "chưa đọc"
+                          ? Colors.grey
+                          : Colors.blue,
+                    ),
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    Expanded(
+                      // Để văn bản không bị tràn ra ngoài
+                      child: Text(
+                        _lastStateMessage.lastMessage,
+                        style: TextStyle(
+                          color: _lastStateMessage.lastStatus == "chưa đọc"
+                              ? Colors.white
+                              : Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                trailing: Text(
+                  _lastStateMessage.lastTime.split(" ")[1].substring(0, 5),
+                  style: TextStyle(
+                    color: _lastStateMessage.lastStatus == "chưa đọc"
+                        ? Colors.white
+                        : Colors.grey,
                   ),
                 ),
               ),
             );
           },
-        );
-      },
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0.0, end: _isTapped ? 1.0 : 0.0),
-        duration: const Duration(milliseconds: 200),
-        builder: (context, position, child) {
-          return Container(
-            decoration: BoxDecoration(
-              // Gradient will change first color to second color
-              gradient: LinearGradient(
-                colors: const [
-                  Colors.white30,
-                  Color(0xFF222831),
-                ],
-                stops: [position, position],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-            ),
-            child: ListTile(
-              leading: Stack(
-                children: [
-                  const SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: Icon(
-                      Icons.account_circle_sharp,
-                      color: Color(0xFFF4F6FF),
-                      size: 50,
-                    ),
-                  ),
-                  if (widget.isOnline)
-                    Positioned(
-                      right: 3,
-                      bottom: 0,
-                      child: Container(
-                        width: 17,
-                        height: 17,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFF222831),
-                            width: 3,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              title: Text(
-                _userName,
-                style: const TextStyle(color: Colors.white),
-              ),
-              subtitle: Text(
-                _lastStateMessage.lastMessage,
-                style: TextStyle(
-                  color: _lastStateMessage.lastStatus == "chưa đọc"
-                      ? Colors.white
-                      : Colors.grey,
-                ),
-              ),
-              trailing: Text(
-                _lastStateMessage.lastTime.split(" ")[1].substring(0, 5),
-                style: TextStyle(
-                  color: _lastStateMessage.lastStatus == "chưa đọc"
-                      ? Colors.white
-                      : Colors.grey,
-                ),
-              ),
-            ),
-          );
-        },
+        ),
       ),
     );
   }

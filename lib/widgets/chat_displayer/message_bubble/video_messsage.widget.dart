@@ -3,36 +3,39 @@ import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
 class VideoMessageWidget extends StatefulWidget {
-  final String fileUrl;
+  final String? fileUrl;
   final Widget createdAt;
   final Widget messageState;
 
   const VideoMessageWidget({
-    Key? key,
+    super.key,
     required this.fileUrl,
     required this.createdAt,
     required this.messageState,
-  }) : super(key: key);
+  });
 
   @override
   _VideoMessageWidgetState createState() => _VideoMessageWidgetState();
 }
 
-class _VideoMessageWidgetState extends State<VideoMessageWidget> {
+class _VideoMessageWidgetState extends State<VideoMessageWidget>
+    with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _videoPlayerController;
   ChewieController? _chewieController;
   bool _hasError = false;
+  bool _isUploading = true;
 
   @override
   void initState() {
     super.initState();
-    _initializePlayer();
+    if (widget.fileUrl != null) {
+      _initializePlayer();
+    }
   }
 
   Future<void> _initializePlayer() async {
     try {
-      _videoPlayerController = VideoPlayerController.network(widget.fileUrl);
-
+      _videoPlayerController = VideoPlayerController.network(widget.fileUrl!);
       _videoPlayerController.addListener(() {
         if (_videoPlayerController.value.hasError) {
           setState(() {
@@ -52,10 +55,12 @@ class _VideoMessageWidgetState extends State<VideoMessageWidget> {
 
       setState(() {
         _hasError = false;
+        _isUploading = false;
       });
     } catch (_) {
       setState(() {
         _hasError = true;
+        _isUploading = false;
       });
     }
   }
@@ -64,11 +69,17 @@ class _VideoMessageWidgetState extends State<VideoMessageWidget> {
   void dispose() {
     _videoPlayerController.dispose();
     _chewieController?.dispose();
+
     super.dispose();
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.55,
       child: Column(
@@ -84,9 +95,11 @@ class _VideoMessageWidgetState extends State<VideoMessageWidget> {
                       textAlign: TextAlign.center,
                     ),
                   )
-                : _chewieController != null
-                    ? Chewie(controller: _chewieController!)
-                    : const Center(child: CircularProgressIndicator()),
+                : _isUploading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _chewieController != null
+                        ? Chewie(controller: _chewieController!)
+                        : const Center(child: Text('Chưa có video')),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),

@@ -1,7 +1,5 @@
 import 'package:chat_app_mobile_fe/screens/setting/setting_change_profile_screen.dart';
 import 'package:chat_app_mobile_fe/services/setting_service.dart';
-// Đảm bảo đã thêm thư viện Firestore
-// Thêm thư viện Firebase Auth
 import 'package:flutter/material.dart';
 
 class MySettingInfor extends StatefulWidget {
@@ -15,18 +13,19 @@ class _MySettingInforState extends State<MySettingInfor> {
   String? _fullName;
   final SettingService _settingService = SettingService();
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserData(); // Gọi hàm để lấy dữ liệu người dùng
-  }
-
   Future<void> _fetchUserData() async {
     // Gọi service để lấy thông tin người dùng
     final userData = await _settingService.fetchUserData();
     setState(() {
       _fullName = userData['fullName']; // Cập nhật tên đầy đủ
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fetchUserData(); // Gọi hàm để lấy dữ liệu người dùng
   }
 
   @override
@@ -62,8 +61,7 @@ class _MySettingInforState extends State<MySettingInfor> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _fullName ??
-                        'Người dùng', // Hiển thị tên đầy đủ hoặc "Người dùng" nếu không có
+                    _fullName ?? 'Người dùng',
                     style: const TextStyle(color: Colors.white, fontSize: 20),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,

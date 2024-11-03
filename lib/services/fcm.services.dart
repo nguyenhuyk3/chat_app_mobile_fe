@@ -1,15 +1,25 @@
+import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.bloc.dart';
+import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.event.dart';
+import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.state.dart';
+import 'package:chat_app_mobile_fe/screens/chat/chat_displayer_sceen.dart';
 import 'package:chat_app_mobile_fe/widgets/home/notification.widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FCMService {
-  late FirebaseMessaging _messaging;
+  final GlobalKey<NavigatorState> _navigatorKey;
+
+  FCMService({required GlobalKey<NavigatorState> navigatorKey})
+      : _navigatorKey = navigatorKey;
+
+  late final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   bool _isNotificationVisible = false;
   late OverlayEntry _notificationOverlay;
+  late final FCMService _fcmService;
 
   void setupFCM(GlobalKey<NavigatorState> navigatorKey) {
-    _messaging = FirebaseMessaging.instance;
-
+    // Foreground
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {
         _showNotification(
@@ -20,6 +30,10 @@ class FCMService {
         );
       },
     );
+    // Background
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      _handleNotificationTap(message);
+    });
   }
 
   OverlayEntry _createOverlayEntry(
@@ -71,6 +85,24 @@ class FCMService {
         _notificationOverlay.remove();
         _isNotificationVisible = false;
       },
+    );
+  }
+
+  void _handleNotificationTap(RemoteMessage message) async {
+    final messageBoxId = message.data['messageBoxId'];
+    final receiverId = message.data['receiverId'];
+    final token = message.data['token'];
+    final userName = message.data['userName'];
+
+    Navigator.of(_navigatorKey.currentContext!).push(
+      MaterialPageRoute(
+        builder: (context) => ChatDisplayerScreen(
+          messageBoxId: messageBoxId,
+          receiverId: receiverId,
+          token: token,
+          userName: userName,
+        ),
+      ),
     );
   }
 }

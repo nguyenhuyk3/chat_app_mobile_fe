@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chat_app_mobile_fe/services/setting_service.dart';
 import 'package:flutter/material.dart';
 
@@ -45,14 +47,16 @@ class _SettingProfileNameState extends State<SettingProfileName> {
             ),
             TextButton(
               onPressed: () async {
-                String newName = controller.text; // Lấy tên mới
+                String newName = controller.text;
+
                 if (newName.isNotEmpty) {
                   setState(() {
-                    name = newName; // Cập nhật tên mới
+                    name = newName; 
                   });
                   await _settingService
-                      .updateFullName(newName); // Cập nhật vào Firestore
+                      .updateFullName(newName);
                 }
+                
                 Navigator.of(context).pop();
               },
               child: const Text('Lưu'),

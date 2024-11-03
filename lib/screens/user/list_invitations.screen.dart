@@ -26,7 +26,6 @@ class _ListInvitationssScreenState extends State<ListInvitationsScreen> {
             labelColor: Color(0xFF73EC8B),
             unselectedLabelColor: Colors.white,
             tabs: [
-              Tab(icon: Icon(Icons.group_add_rounded), text: 'Lời mời đã gửi'),
               Tab(
                   icon: Icon(Icons.person_add_alt_1_rounded),
                   text: 'Lời mời kết bạn'),
@@ -34,7 +33,7 @@ class _ListInvitationssScreenState extends State<ListInvitationsScreen> {
           ),
         ),
         body: const TabBarView(
-          children: [SendingInvitationScreen(), ReceivingInvitationScreen()],
+          children: [ReceivingInvitationScreen()],
         ),
       ),
     );
