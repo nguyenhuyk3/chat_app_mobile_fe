@@ -1,4 +1,5 @@
 import 'package:chat_app_mobile_fe/screens/setting/setting_screen.dart';
+import 'package:chat_app_mobile_fe/screens/home/search_history_screen.dart'; // Nhập màn hình mới
 import 'package:chat_app_mobile_fe/widgets/chat_home/search_bar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +18,7 @@ class _ChatHeaderWidgetState extends State<ChatHeaderWidget> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      // hide back arrow
-      // automaticallyImplyLeading: false,
-
       backgroundColor: const Color(0xFF0F181D),
-
       elevation: 1,
       title: _isSearching
           ? SearchBarWidget(searchController: _searchController)
@@ -31,42 +28,42 @@ class _ChatHeaderWidgetState extends State<ChatHeaderWidget> {
             ? IconButton(
                 icon: const Icon(Icons.clear, color: Colors.white),
                 onPressed: () {
-                  _searchController
-                      .clear(); // Xóa nội dung khi nhấn nút "clear"
+                  _searchController.clear();
                   setState(() {
-                    _isSearching = false; // Tắt chế độ tìm kiếm
+                    _isSearching = false;
                   });
                 },
               )
             : IconButton(
                 icon: const Icon(Icons.search, color: Colors.white),
                 onPressed: () {
-                  setState(() {
-                    _isSearching = true; // Bật chế độ tìm kiếm
-                  });
+                  // Ngay khi bấm vào biểu tượng tìm kiếm, điều hướng đến màn hình tìm kiếm
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchHistoryScreen(),
+                    ),
+                  );
                 },
               ),
-        // Sử dụng PopupMenuTheme
         PopupMenuTheme(
           data: const PopupMenuThemeData(
             color: Color.fromARGB(255, 24, 41, 50),
           ),
           child: PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.white),
-            offset: const Offset(0, 40), // Đẩy menu xuống dưới icon
+            offset: const Offset(0, 40),
             onSelected: (value) {
               if (value == 'settings') {
-                // Xử lý khi chọn "Cài đặt"
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const MySettingScreen()));
-                // Điều hướng tới màn hình cài đặt (nếu cần)
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MySettingScreen(),
+                  ),
+                );
               } else if (value == 'logout') {
-                // Xử lý khi chọn "Đăng xuất"
                 FirebaseAuth.instance.signOut();
                 Navigator.pushReplacementNamed(context, '/login');
-                // Thực hiện đăng xuất tại đây
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[

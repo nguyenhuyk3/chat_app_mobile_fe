@@ -46,6 +46,7 @@ class _MyAppState extends State<MyApp> {
         '/home': (BuildContext context) => const ChatHomeScreen(),
         '/login': (BuildContext context) => const LoginScreen(),
       },
+      debugShowCheckedModeBanner: false,
     );
   }
 }
