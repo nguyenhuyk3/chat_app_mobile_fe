@@ -31,9 +31,9 @@ class AuthServices {
       final user = AppUser(
         phoneNumber: '',
         email: email,
-        information: Infomation(
+        information: Information(
           fullName: "",
-          dateOfBirth: DateTime.now().toString(),
+          dayOfBirth: DateTime.now().toString(),
           genre: "Nam",
         ),
         state: true,
@@ -78,23 +78,19 @@ class AuthServices {
   Future<void> verifyCode(
       String email, String enteredCode, BuildContext context) async {
     try {
-      // Lấy tài liệu từ Firestore
       DocumentSnapshot document = await FirebaseFirestore.instance
           .collection('verificationSignupCodes')
           .doc(email)
           .get();
 
       if (document.exists) {
-        // Ép kiểu dữ liệu để truy cập vào các phần tử
         Map<String, dynamic>? data = document.data() as Map<String, dynamic>?;
         String? verificationCode = data?['verificationCode'];
         DateTime expirationTime =
             (data?['expirationTime'] as Timestamp).toDate();
 
-        // Kiểm tra mã xác minh và thời gian hết hạn
         if (verificationCode == enteredCode) {
           if (DateTime.now().isBefore(expirationTime)) {
-            // Chuyển tới trang SignupScreen
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -145,11 +141,10 @@ class AuthServices {
         await _db.collection('users').doc(userId).update({
           'information': {
             'fullName': fullName,
-            'dateOfBirth': dateOfBirth,
+            'dayOfBirth': dateOfBirth,
             'genre': genre,
           },
         });
-
         print('Thông tin người dùng đã được cập nhật thành công!');
       } else {
         print('Không tìm thấy người dùng với email này.');

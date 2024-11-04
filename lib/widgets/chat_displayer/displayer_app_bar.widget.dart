@@ -26,7 +26,7 @@ class DisplayerAppBarWidget extends StatelessWidget
         bool isOnline =
             state is ChatLoaded && state.onlineFriendIds.contains(receiverId);
         return AppBar(
-          backgroundColor: const Color(0xFF31363F),
+          backgroundColor: const Color(0xFF303841),
           elevation: 1,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),

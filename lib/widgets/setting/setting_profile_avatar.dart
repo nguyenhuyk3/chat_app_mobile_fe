@@ -16,8 +16,13 @@ class _SettingProfileAvatarState extends State<SettingProfileAvatar> {
         child: Stack(
           children: [
             const CircleAvatar(
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.transparent,
               radius: 80,
+              child: Icon(
+                Icons.account_circle,
+                color: Colors.white,
+                size: 160,
+              ),
             ),
             Positioned(
               right: 0,
@@ -25,7 +30,7 @@ class _SettingProfileAvatarState extends State<SettingProfileAvatar> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: const Color(0xFF00FF9C),
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: const Icon(

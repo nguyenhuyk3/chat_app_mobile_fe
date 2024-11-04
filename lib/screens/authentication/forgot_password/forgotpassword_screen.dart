@@ -47,8 +47,7 @@ class _MyForgotPasswordScreen extends State<ForgotPasswordScreen> {
           emailController: _emailcontroller,
           formKey: _formkey,
           onSubmit: (email) {
-            _authServices.sendVerifycationLink(
-                context, email); // Truyền hàm vào đây
+            _authServices.sendVerifycationLink(context, email);
           },
         ),
       ),

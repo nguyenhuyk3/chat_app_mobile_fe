@@ -56,7 +56,7 @@ class _ReceivingInvitationScreenState extends State<ReceivingInvitationScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFF31363F),
+      color: const Color(0xFF222831),
       child: FutureBuilder<List<FriendRequest>>(
         future: UserService.getAllInvitations("receiving_invitation_box"),
         builder: (BuildContext context,
@@ -138,7 +138,7 @@ class _ReceivingInvitationScreenState extends State<ReceivingInvitationScreen> {
                                     invitations,
                                   ),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF0D7C66),
+                                    backgroundColor: const Color(0xFF1F8A70),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
@@ -179,9 +179,10 @@ class _ReceivingInvitationScreenState extends State<ReceivingInvitationScreen> {
               child: Text(
                 'Bạn không nhận được lời mời kết bạn nào',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
               ),
             );
           }

@@ -16,7 +16,7 @@ class _ListInvitationssScreenState extends State<ListInvitationsScreen> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 1,
-          backgroundColor: const Color(0xFF31363F),
+          backgroundColor: const Color(0xFF303841),
           toolbarHeight: 0,
           // hide back arrow
           automaticallyImplyLeading: false,

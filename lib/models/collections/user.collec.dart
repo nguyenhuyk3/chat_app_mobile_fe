@@ -3,7 +3,7 @@ import 'package:chat_app_mobile_fe/models/information.dart';
 class AppUser {
   final String _phoneNumber;
   final String _email;
-  final Infomation _information;
+  final Information _information;
   final bool _state;
   final String _sendingInvitationBoxId;
   final String _receivingInvitationBoxId;
@@ -15,7 +15,7 @@ class AppUser {
   AppUser({
     required String phoneNumber,
     required String email,
-    required Infomation information,
+    required Information information,
     required bool state,
     required String sendingInvitationBoxId,
     required String receivingInvitationBoxId,
@@ -36,7 +36,7 @@ class AppUser {
 
   String get phoneNumber => _phoneNumber;
   String get email => _email;
-  Infomation get information => _information;
+  Information get information => _information;
   bool get state => _state;
   String get sendingInvitationBoxId => _sendingInvitationBoxId;
   String get receivingInvitationBoxId => _receivingInvitationBoxId;
@@ -64,7 +64,7 @@ class AppUser {
     return AppUser(
       phoneNumber: json['phoneNumber'],
       email: json['email'],
-      information: Infomation.fromJson(
+      information: Information.fromJson(
         json['information'],
       ),
       state: json['state'],

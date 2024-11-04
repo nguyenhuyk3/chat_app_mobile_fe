@@ -22,8 +22,8 @@ class _ChatHeaderWidgetState extends State<ChatHeaderWidget> {
   Widget build(BuildContext context) {
     return AppBar(
       // hide back arrow
-      // automaticallyImplyLeading: false,
-      backgroundColor: const Color(0xFF0F181D),
+      automaticallyImplyLeading: false,
+      backgroundColor: const Color(0xFF303841),
       elevation: 1,
       title: _isSearching
           ? SearchBarWidget(searchController: _searchController)
@@ -53,7 +53,7 @@ class _ChatHeaderWidgetState extends State<ChatHeaderWidget> {
               ),
         PopupMenuTheme(
           data: const PopupMenuThemeData(
-            color: Color.fromARGB(255, 24, 41, 50),
+            color: Color(0xFF393E46),
           ),
           child: PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.white),

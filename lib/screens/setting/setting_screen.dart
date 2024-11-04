@@ -13,9 +13,9 @@ class _MySettingScreenState extends State<MySettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B141B),
+      backgroundColor: const Color(0xFF222831),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0B141B),
+        backgroundColor: const Color(0xFF303841),
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Row(
           children: [
@@ -26,14 +26,12 @@ class _MySettingScreenState extends State<MySettingScreen> {
           ],
         ),
       ),
-      body: Container(
-        child: const SingleChildScrollView(
-          child: Column(
-            children: [
-              MySettingInfor(),
-              SettingItems(),
-            ],
-          ),
+      body: const SingleChildScrollView(
+        child: Column(
+          children: [
+            MySettingInfor(),
+            SettingItems(),
+          ],
         ),
       ),
     );

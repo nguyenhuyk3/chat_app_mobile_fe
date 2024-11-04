@@ -1,5 +1,4 @@
 import 'package:chat_app_mobile_fe/screens/chat/chat_home_screen.dart';
-
 import 'package:chat_app_mobile_fe/screens/user/list_invitations.screen.dart';
 import 'package:chat_app_mobile_fe/widgets/chat_home/chat_header_widget.dart';
 import 'package:chat_app_mobile_fe/widgets/home/bottom_navigation_bar_items.widget.dart';

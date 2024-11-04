@@ -83,16 +83,6 @@ class _FormSelectDayMonthYearState extends State<FormSelectDayMonthYear> {
         ),
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text(
-                "Đặt ngày",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                ),
-              ),
-            ),
             Expanded(
               child: Row(
                 children: [

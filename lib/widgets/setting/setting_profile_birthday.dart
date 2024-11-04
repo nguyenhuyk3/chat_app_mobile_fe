@@ -1,29 +1,16 @@
-import 'package:chat_app_mobile_fe/services/setting.service.dart';
 import 'package:flutter/material.dart';
 
-class SettingProfileEmail extends StatefulWidget {
-  const SettingProfileEmail({super.key}); // Nhận email từ constructor
+class SettingProfileBirthday extends StatelessWidget {
+  final String birthday;
+  final bool isEditing;
+  final Function() onEdit;
 
-  @override
-  State<SettingProfileEmail> createState() => _SettingProfileEmailState();
-}
-
-class _SettingProfileEmailState extends State<SettingProfileEmail> {
-  String? email; // Biến để lưu email
-  final SettingService _settingService = SettingService();
-  @override
-  void initState() {
-    super.initState();
-    // Khởi tạo email từ widget
-    _fetchUserData();
-  }
-
-  Future<void> _fetchUserData() async {
-    final userData = await _settingService.fetchUserData();
-    setState(() {
-      email = userData['email'];
-    });
-  }
+  const SettingProfileBirthday({
+    required this.birthday,
+    required this.isEditing,
+    required this.onEdit,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +19,7 @@ class _SettingProfileEmailState extends State<SettingProfileEmail> {
         const Padding(
           padding: EdgeInsets.only(right: 15, left: 15),
           child: Icon(
-            Icons.mail,
+            Icons.calendar_month_outlined,
             color: Colors.white70,
           ),
         ),
@@ -54,13 +41,13 @@ class _SettingProfileEmailState extends State<SettingProfileEmail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Email',
+                          'Ngày sinh ',
                           style: TextStyle(color: Colors.white70),
                         ),
                         SizedBox(
-                          width: 299, // Chiều rộng tối đa cho email
+                          width: 299,
                           child: Text(
-                            email ?? 'Chưa có email', // Hiển thị email
+                            birthday.isNotEmpty ? birthday : 'Chưa có ngày',
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 18),
                             maxLines: 1,
@@ -69,6 +56,17 @@ class _SettingProfileEmailState extends State<SettingProfileEmail> {
                         ),
                       ],
                     ),
+                    if (isEditing) // Chỉ hiển thị khi đang chỉnh sửa
+                      GestureDetector(
+                        onTap: onEdit,
+                        child: const Padding(
+                          padding: EdgeInsets.only(right: 15),
+                          child: Icon(
+                            Icons.edit_calendar,
+                            color: Color(0xFF00FF9C),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ],

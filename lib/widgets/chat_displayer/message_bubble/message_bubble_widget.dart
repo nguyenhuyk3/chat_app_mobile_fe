@@ -34,7 +34,7 @@ class MessageBubbleWidget extends StatelessWidget {
           ? Colors.grey
           : message.state == ""
               ? Colors.grey
-              : const Color(0xFF1679AB),
+              : Colors.blue,
     );
 
     if (isVideoMessage) {

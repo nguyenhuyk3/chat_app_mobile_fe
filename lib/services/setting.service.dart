@@ -1,9 +1,12 @@
+
+
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
 
 import 'package:chat_app_mobile_fe/global/global_var.dart';
 import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
+import 'package:chat_app_mobile_fe/widgets/modals/form_day_month_year.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,22 +25,24 @@ class SettingService {
 
       if (querySnapshot.docs.isNotEmpty) {
         // Nếu tìm thấy tài liệu
-        final userDocument = querySnapshot.docs.first; // Lấy tài liệu đầu tiên
+        final userDocument = querySnapshot.docs.first;
         return {
           'fullName': userDocument.data()['information']['fullName'],
+          'birthday': userDocument.data()['information']['dayOfBirth'],
           'email': currentUser.email,
         };
       }
     }
-    return {'fullName': null, 'email': null}; // Trả về null nếu không tìm thấy
+    return {'fullName': null, 'email': null}; 
   }
 
-  Future<void> updateFullName(String fullName) async {
+  Future<void> updateInformation({required String fullName, required String dayOfBirth}) async {
     final String? userId = await SharedPreferencesHelper.getUserId();
     const String url = "${GlobalVar.httpBaseUrl}/users/update_information";
     final Map<String, String> request = {
       "userId": userId!,
       "fullName": fullName,
+      "dadayOfBirth": dayOfBirth,
     };
     try {
       var response = await http.post(
@@ -67,18 +72,70 @@ class SettingService {
         final String email = currentUser.email!;
         final credential = EmailAuthProvider.credential(
             email: email, password: currentPassword);
-
         await currentUser.reauthenticateWithCredential(credential);
-
-        // Cập nhật mật khẩu mới
         await currentUser.updatePassword(newPassword);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Đổi mật khẩu thành công')),
         );
       } on FirebaseAuthException catch (e) {
-        // Xử lý lỗi nếu có
-        print('Lỗi: ${e.message}');
+        print('Error: ${e.message}');
       }
     }
+  }
+
+  Future<void> editName(BuildContext context, String currentName,
+      Function(String) onNameUpdated) async {
+    TextEditingController controller = TextEditingController(text: currentName);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Chỉnh sửa tên'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: "Nhập tên mới"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () {
+                String newName = controller.text; // Lấy tên mới
+                if (newName.isNotEmpty) {
+                  onNameUpdated(newName); // Gọi callback để cập nhật tên
+                }
+                Navigator.of(context).pop();
+              },
+              child: const Text('Lưu'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showDatePicker(BuildContext context, String currentBirthday,
+      Function(String) onDateSelected) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: FormSelectDayMonthYear(
+            onDateSelected: (date) {
+              onDateSelected(date); // Gọi callback để thông báo ngày đã chọn
+              Navigator.pop(context);
+            },
+            initialDate:
+                currentBirthday, // Gán giá trị birthday vào initialDate
+          ),
+        );
+      },
+    );
   }
 }

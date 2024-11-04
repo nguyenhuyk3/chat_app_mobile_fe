@@ -14,7 +14,7 @@ class BottomNavigationBarItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       elevation: 1,
-      backgroundColor: const Color(0xFF31363F),
+      backgroundColor: const Color(0xFF303841),
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Container(
@@ -22,7 +22,7 @@ class BottomNavigationBarItems extends StatelessWidget {
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(19),
               color: _selectedIndex == 0
-                  ? const Color(0xFF0D7C66)
+                  ? const Color(0xFF40A578)
                   : Colors.transparent,
             ),
             margin: const EdgeInsets.only(top: 2.5),
@@ -41,7 +41,7 @@ class BottomNavigationBarItems extends StatelessWidget {
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(19),
               color: _selectedIndex == 1
-                  ? const Color(0xFF0D7C66)
+                  ? const Color(0xFF40A578)
                   : Colors.transparent,
             ),
             margin: const EdgeInsets.only(top: 2.5),

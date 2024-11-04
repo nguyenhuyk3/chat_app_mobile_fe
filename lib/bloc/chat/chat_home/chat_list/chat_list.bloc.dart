@@ -39,7 +39,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     _channel.stream.listen((dynamic data) {
       final jsonData = jsonDecode(data);
 
-      print("concakkkkkkkkkkkk");
+      print("ChatListBloc (_initializeWebSocket)");
       print(jsonData);
 
       if (jsonData["type"] == "onlineFriends") {

@@ -14,18 +14,18 @@ class _MySettingInforState extends State<MySettingInfor> {
   final SettingService _settingService = SettingService();
 
   Future<void> _fetchUserData() async {
-    // Gọi service để lấy thông tin người dùng
+    // Call service to get user information
     final userData = await _settingService.fetchUserData();
     setState(() {
-      _fullName = userData['fullName']; // Cập nhật tên đầy đủ
+      // Update full name
+      _fullName = userData['fullName'];
     });
   }
 
   @override
   void initState() {
     super.initState();
-
-    _fetchUserData(); // Gọi hàm để lấy dữ liệu người dùng
+    _fetchUserData();
   }
 
   @override
@@ -48,37 +48,27 @@ class _MySettingInforState extends State<MySettingInfor> {
             bottom: BorderSide(width: 0.08, color: Colors.white),
           ),
         ),
-        child: Row(
-          children: [
-            const CircleAvatar(
-              backgroundColor: Colors.white,
-              maxRadius: 30,
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _fullName ?? 'Người dùng',
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  const Text(
-                    'Xin chào! đến với Ping ME',
-                    style: TextStyle(color: Colors.white60, fontSize: 12),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-            const Icon(
-              Icons.arrow_drop_down_circle_outlined,
-              color: Colors.green,
-            ),
-          ],
+        child: ListTile(
+          leading: const Icon(
+            Icons.account_circle,
+            color: Colors.white,
+            size: 50,
+          ),
+          title: Text(
+            _fullName ?? 'Người dùng',
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          subtitle: const Text(
+            'Xin chào! đến với Ping ME',
+            style: TextStyle(color: Colors.white60, fontSize: 12),
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: const Icon(
+            Icons.arrow_drop_down_circle_outlined,
+            color: Colors.green,
+          ),
         ),
       ),
     );

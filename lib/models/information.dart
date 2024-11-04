@@ -1,14 +1,14 @@
-class Infomation {
+class Information {
   final String _fullName;
   final String _dateOfBirth;
   final String _genre;
 
-  Infomation({
+  Information({
     required String fullName,
-    required String dateOfBirth,
+    required String dayOfBirth,
     required String genre,
   })  : _fullName = fullName,
-        _dateOfBirth = dateOfBirth,
+        _dateOfBirth = dayOfBirth,
         _genre = genre;
 
   String get fullName => _fullName;
@@ -18,15 +18,15 @@ class Infomation {
   Map<String, dynamic> toJson() {
     return {
       'fullName': _fullName,
-      'dateOfBirth': _dateOfBirth,
+      'dayOfBirth': _dateOfBirth,
       'genre': _genre,
     };
   }
 
-  factory Infomation.fromJson(Map<String, dynamic> json) {
-    return Infomation(
+  factory Information.fromJson(Map<String, dynamic> json) {
+    return Information(
         fullName: json['fullName'],
-        dateOfBirth: json['dateOfBirth'],
+        dayOfBirth: json['dayOfBirth'],
         genre: json['genre']);
   }
 }
