@@ -1,5 +1,5 @@
 import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
-import 'package:chat_app_mobile_fe/screens/home/search_history_screen.dart';
+import 'package:chat_app_mobile_fe/screens/home/search.screen.dart';
 import 'package:chat_app_mobile_fe/screens/setting/setting_screen.dart';
 import 'package:chat_app_mobile_fe/services/auth.services.dart';
 import 'package:chat_app_mobile_fe/services/notification.services.dart';
@@ -46,7 +46,7 @@ class _ChatHeaderWidgetState extends State<ChatHeaderWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const SearchHistoryScreen(),
+                      builder: (context) => const SearchScreen(),
                     ),
                   );
                 },

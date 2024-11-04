@@ -42,7 +42,7 @@ class SettingService {
     final Map<String, String> request = {
       "userId": userId!,
       "fullName": fullName,
-      "dadayOfBirth": dayOfBirth,
+      "dayOfBirth": dayOfBirth,
     };
     try {
       var response = await http.post(
@@ -74,6 +74,7 @@ class SettingService {
             email: email, password: currentPassword);
         await currentUser.reauthenticateWithCredential(credential);
         await currentUser.updatePassword(newPassword);
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Đổi mật khẩu thành công')),
         );

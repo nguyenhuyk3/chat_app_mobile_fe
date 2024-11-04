@@ -44,7 +44,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        BlocProvider(create: (context) => ChatListBloc()),
+        BlocProvider(
+          create: (context) => ChatListBloc(),
+        ),
       ],
       child: MaterialApp(
         navigatorKey: _navigatorKey,

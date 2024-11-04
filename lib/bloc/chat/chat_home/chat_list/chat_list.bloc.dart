@@ -183,7 +183,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
 
   @override
   Future<void> close() {
-    // _channel.sink.close();
+    _channel.sink.close();
 
     return super.close();
   }

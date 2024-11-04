@@ -1,5 +1,5 @@
 import 'package:chat_app_mobile_fe/screens/setting/setting_change_profile_screen.dart';
-import 'package:chat_app_mobile_fe/services/setting_service.dart';
+import 'package:chat_app_mobile_fe/services/setting.service.dart';
 import 'package:flutter/material.dart';
 
 class MySettingInfor extends StatefulWidget {

@@ -67,6 +67,7 @@ class _SettingChangeProfileScreenState
       setState(() {
         birthday = date; // Cập nhật giá trị birthday
       });
+      print("Updated birthday: $birthday");
     });
   }
 
@@ -128,7 +129,7 @@ class _SettingChangeProfileScreenState
                       onPressed: () {
                         _updateInformation(
                             fullName: name, dayOfBirth: birthday);
-                      }, 
+                      },
                       child: const Text(
                         "Lưu",
                         style: TextStyle(color: Color(0xFF00FF9C)),
