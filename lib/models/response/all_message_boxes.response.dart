@@ -60,6 +60,28 @@ class LastStateMessage {
       'lastStatus': lastStatus,
     };
   }
+
+  LastStateMessage clone() {
+    return LastStateMessage(
+        userId: userId,
+        lastMessage: lastMessage,
+        lastTime: lastTime,
+        lastStatus: lastStatus);
+  }
+
+  LastStateMessage copyWith({
+    String? userId,
+    String? lastMessage,
+    String? lastTime,
+    String? lastStatus,
+  }) {
+    return LastStateMessage(
+      userId: userId ?? this.userId,
+      lastMessage: lastMessage ?? this.lastMessage,
+      lastTime: lastTime ?? this.lastTime,
+      lastStatus: lastStatus ?? this.lastStatus,
+    );
+  }
 }
 
 class MessageBoxResponse {
@@ -112,5 +134,44 @@ class MessageBoxResponse {
       return messageBoxes;
     }
     return [];
+  }
+
+  MessageBoxResponse clone() {
+    MessageBoxResponse cloned = MessageBoxResponse.fromJson({
+      'messageBoxId': messageBoxId,
+      'firstInforUser': firstInforUser.toJson(),
+      'secondInforUser': secondInforUser.toJson(),
+      'lastStateMessageForFirstUser': lastStateMessageForFirstUser.toJson(),
+      'lastStateMessageForSecondUser': lastStateMessageForSecondUser.toJson(),
+      'messages': messages.map((m) => m.toJson()).toList(),
+      'createdAt': createdAt,
+    });
+    return cloned;
+  }
+
+  MessageBoxResponse copyWith({
+    String? messageBoxId,
+    UserInfor? firstInforUser,
+    UserInfor? secondInforUser,
+    LastStateMessage? lastStateMessageForFirstUser,
+    LastStateMessage? lastStateMessageForSecondUser,
+    List<Message>? messages,
+    String? createdAt,
+  }) {
+    return MessageBoxResponse.fromJson({
+      'messageBoxId': messageBoxId ?? this.messageBoxId,
+      'firstInforUser':
+          firstInforUser?.toJson() ?? this.firstInforUser.toJson(),
+      'secondInforUser':
+          secondInforUser?.toJson() ?? this.secondInforUser.toJson(),
+      'lastStateMessageForFirstUser': lastStateMessageForFirstUser?.toJson() ??
+          this.lastStateMessageForFirstUser.toJson(),
+      'lastStateMessageForSecondUser':
+          lastStateMessageForSecondUser?.toJson() ??
+              this.lastStateMessageForSecondUser.toJson(),
+      'messages': messages?.map((m) => m.toJson()).toList() ??
+          this.messages.map((m) => m.toJson()).toList(),
+      'createdAt': createdAt ?? this.createdAt,
+    });
   }
 }

@@ -13,4 +13,13 @@ class GeneratorUtil {
       ),
     );
   }
+
+  static String generateUniqueFileName(String originalPath) {
+    final fileName = originalPath.split('/').last;
+    final name = fileName.split('.').first;
+    final extension = fileName.split('.').last;
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    
+    return '${name}_$timestamp.$extension';
+  }
 }

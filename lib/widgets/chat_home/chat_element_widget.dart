@@ -3,6 +3,7 @@
 import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.bloc.dart';
 import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.event.dart';
 import 'package:chat_app_mobile_fe/bloc/chat/chat_home/chat_list/chat_list.state.dart';
+import 'package:chat_app_mobile_fe/global/global_var.dart';
 import 'package:chat_app_mobile_fe/helpers/shared_preferences_helper.dart';
 import 'package:chat_app_mobile_fe/models/response/all_message_boxes.response.dart';
 import 'package:chat_app_mobile_fe/screens/chat/chat_displayer_sceen.dart';
@@ -34,6 +35,7 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
   String? _token;
   // state variable to track when pressed
   bool _isTapped = false;
+  bool _isMissedCall = false;
   late final LastStateMessage _lastStateMessage;
 
   Future<void> _initUserId() async {
@@ -60,6 +62,8 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
             widget.messageBoxReponse.lastStateMessageForFirstUser.userId
         ? widget.messageBoxReponse.lastStateMessageForSecondUser
         : widget.messageBoxReponse.lastStateMessageForFirstUser;
+    _isMissedCall =
+        _lastStateMessage.lastMessage.contains(GlobalVar.keyJoinRoom);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<ChatListBloc>(context).stream.listen((state) {
@@ -84,8 +88,10 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
             _isTapped = true;
           });
 
-          context.read<ChatListBloc>().add(MarkMessageAsRead(
-              messageBoxId: widget.messageBoxId, userId: _userId!));
+          context.read<ChatListBloc>().add(
+                MarkMessageAsRead(
+                    messageBoxId: widget.messageBoxId, userId: _userId!),
+              );
 
           Future.delayed(
             const Duration(milliseconds: 200),
@@ -104,6 +110,7 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
                       token: _token,
                       receiverId: widget.receiverId,
                       userName: _userName,
+                      isCallAtForeground: false,
                     ),
                   ),
                 ),
@@ -175,13 +182,16 @@ class _ChatElementWidgetState extends State<ChatElementWidget> {
                       width: 4,
                     ),
                     Expanded(
-                      // Để văn bản không bị tràn ra ngoài
+                      // To prevent text from overflowing
                       child: Text(
-                        _lastStateMessage.lastMessage,
+                        _lastStateMessage.lastMessage.split(GlobalVar.keyJoinRoom)[0],
                         style: TextStyle(
-                          color: _lastStateMessage.lastStatus == "chưa đọc"
-                              ? Colors.white
-                              : Colors.grey,
+                          color: _isMissedCall &&
+                                  _lastStateMessage.lastStatus == "chưa đọc"
+                              ? Colors.red
+                              : _lastStateMessage.lastStatus == "chưa đọc"
+                                  ? Colors.white
+                                  : Colors.grey,
                         ),
                       ),
                     ),

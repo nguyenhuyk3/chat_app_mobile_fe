@@ -5,13 +5,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:chat_app_mobile_fe/global/global_var.dart';
 import 'package:chat_app_mobile_fe/models/response/message.reponse.dart';
+import 'package:chat_app_mobile_fe/utils/log.utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ChatServices {
+  static final logger = Logger(printer: CustomPrinter());
+
   static Future<List<MessageResponse>> getMessageBoxById(
       String messageBoxId) async {
     final String url =
@@ -46,7 +50,7 @@ class ChatServices {
   static void sendMessage(
       {required String senderId,
       required String receiverId,
-      required String? token,
+      String? token,
       required String messageBoxId,
       required String content,
       required String? type,
@@ -66,15 +70,18 @@ class ChatServices {
     }
   }
 
-  static Future<String> uploadFile(File file) async {
+  static Future<String> uploadFile(
+      {required File file, required String type}) async {
     try {
-      const url = "${GlobalVar.httpBaseUrl}/file/upload_file";
+      final subUrl =
+          type == "video" ? "upload_video_file" : "upload_audio_file";
+      final url = "${GlobalVar.httpBaseUrl}/file/$subUrl";
       final MultipartRequest request =
           http.MultipartRequest('POST', Uri.parse(url));
 
       request.files.add(await http.MultipartFile.fromPath(
         // Field name in your API
-        'file',
+        "file",
         file.path,
         // Get file name
         filename: file.uri.pathSegments.last,
@@ -91,7 +98,10 @@ class ChatServices {
         throw Exception('Failed to upload file');
       }
     } catch (e) {
-      debugPrint('Error uploading file: $e');
+      logger.w("==================================");
+      logger.i("uploadFile");
+      logger.i("Exception: $e");
+      logger.w("==================================");
       return '';
     }
   }
@@ -103,13 +113,14 @@ class ChatServices {
     required String messageBoxId,
     required String sendedId,
     required File file,
+    required String typeOfFile,
     required WebSocketChannel channel,
   }) async {
     try {
-      String fileUrl = await uploadFile(file);
+      String fileUrl = await uploadFile(file: file, type: typeOfFile);
 
       if (fileUrl.isEmpty) {
-        debugPrint('Upload failed. File URL is empty.');
+        logger.e("Upload failed. File URL is empty.");
         return "";
       }
 
@@ -122,6 +133,9 @@ class ChatServices {
         type = 'image';
       } else if (['.pdf', '.doc', '.docx', '.txt'].contains(extension)) {
         type = 'document';
+      } else if (['.mp3', '.mp4', '.aac', '.m4a', '.wav', '.ogg']
+          .contains(extension)) {
+        type = 'audio';
       } else {
         type = 'unknown';
       }
@@ -138,11 +152,11 @@ class ChatServices {
 
       channel.sink.add(messageData);
 
-      debugPrint('File metadata sent successfully: $messageData');
+      logger.i('File metadata sent successfully (sendFile): $messageData');
 
       return fileUrl;
     } catch (e) {
-      debugPrint('Error sending file message: $e');
+      logger.e('Error sending file message (sendFile): $e');
 
       return "";
     }

@@ -4,7 +4,7 @@ class CheckDate {
   static String formatDate(String dateString) {
     DateTime date = DateTime.parse(dateString);
 
-    return DateFormat('dd/MM/yyyy').format(date); 
+    return DateFormat('dd/MM/yyyy').format(date);
   }
 
   static bool isSameDay(String date1, String date2) {
@@ -17,8 +17,16 @@ class CheckDate {
   }
 
   static String formatTime(DateTime dateTime) {
-  final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
-  
-  return formatter.format(dateTime);
-}
+    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+
+    return formatter.format(dateTime);
+  }
+
+  static String formatDuration(int seconds) {
+    int hours = seconds ~/ 3600;
+    int minutes = (seconds % 3600) ~/ 60;
+    int secondsLeft = seconds % 60;
+
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${secondsLeft.toString().padLeft(2, '0')}';
+  }
 }

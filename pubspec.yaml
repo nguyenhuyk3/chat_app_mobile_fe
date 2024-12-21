@@ -55,6 +55,15 @@ dependencies:
   flutter_bloc: ^8.1.6
   emoji_picker_flutter: ^3.1.0
   provider: ^6.1.2
+  flutter_webrtc: ^0.12.1+hotfix.1
+  logger: ^2.4.0
+  permission_handler: ^11.3.1
+  ansicolor: ^2.0.3
+  flutter_local_notifications: ^18.0.1
+  flutter_sound: ^9.17.8
+  just_audio: ^0.9.18
+  audioplayers: ^6.1.0
+  equatable: ^2.0.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
